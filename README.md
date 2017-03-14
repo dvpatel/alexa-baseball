@@ -9,7 +9,6 @@ System Requirements:
 *  AWS DynamoDB (remote or local)
 *  Modules in data/scripts/package.json
 
-
 Quick Run-time
 -------------------
 Code Access:  
@@ -20,7 +19,9 @@ Install modules:
 *  npm install
 	
 Run Samples:  
-*  Launch DynamoDB local.  Instructions:  http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
+*  Launch DynamoDB local.  
+Instructions:  http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html
+
 
 Create DynamoDB Tables.
 *  node PlayersCreateTable.js
@@ -32,7 +33,15 @@ Import players and batting data.  The data repository is from baseball data bank
 *  node BattingLoadData.js
 
 Samples.
-*  Get top home runs hitters for a given time range:  node HomerunKing.js 1989 1999
-*  Get all players with greater than "n" home runs in a given year:  node HomerunsSearch.js 2001 50
-*  Search players by last name:  node PlayersSearch.js Bonds
+Get top home runs hitters for a given time range:
+*  node HomerunKing.js 1989 1999
 
+
+
+Get all players with greater than "n" home runs in a given year:  
+*  node HomerunsSearch.js 2001 50
+
+
+
+Search players by last name:
+*  node PlayersSearch.js Bonds
