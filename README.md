@@ -1,4 +1,2 @@
 # alexa-baseball
-Baseball home runs data for Alex
-
-Test 2
+Baseball home runs data for Alexa
