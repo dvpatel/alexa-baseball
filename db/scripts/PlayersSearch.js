@@ -1,5 +1,5 @@
 /*
- *  node PlayersSearch Jackson
+ *  node PlayersSearch Ortiz
  *  Find player given last name
  */
 
@@ -12,8 +12,14 @@ AWS.config.update({
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var inpLastname = (process.argv[2] || "Randolph") ;
+/*
+ * Input last name
+ */
+var inpLastname = (process.argv[2] || "Ortiz") ;
 
+/*
+ * Search against Players table
+ */
 var params = {
     TableName : "Players",
     IndexName : "LastnameIndex",

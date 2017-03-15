@@ -7,6 +7,13 @@ AWS.config.update({
 
 var dynamodb = new AWS.DynamoDB();
 
+/*
+ * Create Players table
+ * Partition Key:  player ID
+ * 
+ * GSI
+ * Partition Key:  Last Name
+ */
 var params = {
     TableName : "Players",
     KeySchema: [       
@@ -31,6 +38,9 @@ var params = {
     ],
 };
 
+/*
+ * Create Players Table
+ */
 dynamodb.createTable(params, function(err, data) {
     if (err) {
         console.log(err) ;

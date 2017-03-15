@@ -7,11 +7,20 @@ AWS.config.update({
 
 var dynamodb = new AWS.DynamoDB();
 
+/*
+ * Setup Batting table
+ * Partition Key:  NatualID based on UUID
+ * Range Key:  PlayerID
+ * 
+ * GSI:
+ * Partition Key:  YearID
+ * Range Key:  HR (homeruns)
+ */
 var params = {
     TableName : "Batting",
     KeySchema: [       
-        { AttributeName: "naturalID", KeyType: "HASH"},  //Partition key
-        { AttributeName: "playerID", KeyType: "RANGE" }  //Sort key
+        { AttributeName: "naturalID", KeyType: "HASH"},
+        { AttributeName: "playerID", KeyType: "RANGE" }
     ],
     AttributeDefinitions: [       
         { AttributeName: "naturalID", AttributeType: "S" },
@@ -34,6 +43,10 @@ var params = {
       }
     ],
 };
+
+/*
+ * Create dynamodb table.
+ */
 
 dynamodb.createTable(params, function(err, data) {
     if (err) {

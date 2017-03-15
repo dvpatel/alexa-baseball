@@ -1,3 +1,7 @@
+/*
+ * Script to batch load batting data from db/Batting.csv CSV file
+ */
+
 var uuid=require('uuid/v4') ;
 var fs = require('fs');
 var parse = require('csv-parse');
@@ -10,6 +14,8 @@ AWS.config.update({
 });
 var docClient = new AWS.DynamoDB.DocumentClient();
 
+
+//  Data file
 var dataFile = "../data/Batting.csv" ;
 
 console.log("Importing batting data into DynamoDB. Please wait.");
@@ -20,24 +26,34 @@ var parser = parse({
     delimiter : ','
 }, function(err, data) {
 
+	/*
+	 * Take file data and break into block of 25 items.
+	 * Needed for batch upload to Batting table
+	 */
     var split_arrays = []; 
     var size = 25;
     while (data.length > 0) {
         split_arrays.push(data.splice(0, size));
     }
 
+    /*
+     * For each block item, prepare and import data into dynamodb
+     */
     async.each(split_arrays, function(item_data, callback) {
 
-        var items = [] ;
+    	var items = [] ;
       
         //  pre-process
-	for (var i = 0; i < item_data.length; i++) {
+    	for (var i = 0; i < item_data.length; i++) {
             var b = item_data[i] ;
 
+            /*
+             * NOTE:  Importing only a subset of batting data to save on storage cost.
+             */
             var batting = {} ;
-	    batting["naturalID"] = uuid() ;
-            batting.playerID = b.playerID ;
-            batting.yearID = parseInt(b.yearID) || 0 ;
+            batting["naturalID"] = uuid() ;  //  used for partition ID
+            batting.playerID = b.playerID ;  //  range key
+            batting.yearID = parseInt(b.yearID) || 0 ;  // forcing imported data to be a number;  default to 0 if value is null or empty
 
             batting.HR = parseInt(b.HR) || 0 ;
             batting.RBI = parseInt(b.RBI) || 0 ;
@@ -61,13 +77,16 @@ var parser = parse({
             batting.GIDP = parseInt(b.GIDP) || 0 ;
             */
 
+            /*
+             * dynamodb specific data structure
+             */
             var item = {
                "PutRequest": {
                    "Item":batting
                }
             }
             items.push(item) ;
-	}
+    	}
 
         var params = {
             RequestItems: {
@@ -75,12 +94,18 @@ var parser = parse({
             }
         } ;
 
+        /*
+         * Batch import blocks of data for batting
+         */
         docClient.batchWrite(params, function(err, data) {
             if (err) {
                 console.log(err) ;
             } 
         });
 
+        /*
+         * signal completion of async op
+         */
         callback();
 
     }, function() {

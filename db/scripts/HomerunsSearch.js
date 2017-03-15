@@ -13,13 +13,15 @@ AWS.config.update({
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-
-//  Inputs or default value
+/*
+ * Input with default of 2016 20 home runs
+ */
 var inpYear = (process.argv[2] || 2016)-0 ;
-var inpHR = (process.argv[3] || 10)-0 ;
+var inpHR = (process.argv[3] || 20)-0 ;
 
-
-//  Table parameters ;
+/*
+ * Batting table parameters with limit constraint of 25.
+ */
 var battingParams = {
     TableName : "Batting",
     IndexName : "HomerunsIndex",
@@ -29,7 +31,7 @@ var battingParams = {
          ":hr": inpHR 
     },
     ScanIndexForward: false,
-    //Limit: 25,
+    Limit: 25,
 } ;
 
 var playerParams = {
@@ -39,6 +41,9 @@ var playerParams = {
     },
 } ;
 
+/*
+ * First chained function to get home runs based on inputed values and results constraint
+ */
 function homeruns(callback) {
     docClient.query(battingParams, function(err, data) {
         if (err) {
@@ -49,6 +54,9 @@ function homeruns(callback) {
     });
 }
 
+/*
+ * Second chained function to locate player name based on playerID
+ */
 function playerLookup(hr_items, callback) {
     var r = {} ;
     async.each(hr_items,
@@ -58,17 +66,20 @@ function playerLookup(hr_items, callback) {
                 if (err) {
                     console.error(err) ;
                 } else {
-		    r[item.playerID] = data.Item.firstName + " " + data.Item.lastName ;
+                	r[item.playerID] = data.Item.firstName + " " + data.Item.lastName ;
                 }
-		cb() ;
+                cb() ;
             });
         }, function(err) {
-	    callback(null, hr_items, r) ;
-	}
+        	callback(null, hr_items, r) ;
+        }
     ) ;
 }
 
-function getHomeruns() {
+/*
+ * Calling function to get players with inputed home runs or more for inputed year
+ */
+(function() {
     async.waterfall([ 
         homeruns,
         playerLookup
@@ -77,6 +88,4 @@ function getHomeruns() {
     	    console.log(hr_items[i].HR + " -  " + players[hr_items[i].playerID]+ ", " + hr_items[i].yearID) ;
         }
     }) ;
-}
-
-getHomeruns() ;
+})()

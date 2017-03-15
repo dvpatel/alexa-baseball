@@ -1,3 +1,7 @@
+/*
+ * Import players data from data/Master.csv file
+ */
+
 var AWS = require("aws-sdk");
 
 var fs = require('fs');
@@ -21,7 +25,11 @@ var parser = parse({
     delimiter : ','
 }, function(err, data) {
 
-   var split_arrays = [];
+	/*
+	 *  Prepare data into blocks of 25 items
+	 *  for DynamoDB batch import
+	 */	
+	var split_arrays = [];
     var size = 25;
     while (data.length > 0) {
         split_arrays.push(data.splice(0, size));
@@ -31,10 +39,16 @@ var parser = parse({
 
         var items = [] ;
 
-        //  pre-process
+        /*
+         * For each block, prepare data for import.
+         */
         for (var i = 0; i < item_data.length; i++) {
             var p = item_data[i] ;
 
+            /*
+             * Using only selected attributes from players file
+             * to save on AWS / DynamoDB network, storage, throughput costs
+             */
             var player = {}  ;
             player.playerID = p.playerID ;
             player.firstName = p.nameFirst || "NO_DATA" ;
@@ -58,6 +72,9 @@ var parser = parse({
               }
             }
 
+            /*
+             * Dynamodb constructs
+             */
             var item = {
                "PutRequest": {
                    "Item":player
@@ -73,12 +90,18 @@ var parser = parse({
             }
         } ;
 
+        /*
+         * Batch import players data
+         */
         docClient.batchWrite(params, function(err, data) {
             if (err) {
                 console.log("Error: " + err) ;
             }
         });
 
+        /*
+         * Signal async ops completed.
+         */
         callback();
 
     }, function() {
