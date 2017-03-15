@@ -1,2 +1,2 @@
-db/scripts/npm_modules
+**/node_modules
 /.project
