@@ -1,5 +1,7 @@
 #!/bin/sh
 
+npm install
+
 aws dynamodb delete-table --table-name Teams --endpoint-url http://localhost:8000
 node TeamsCreateTable.js
 node TeamsLoadData.js

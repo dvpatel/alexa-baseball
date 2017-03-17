@@ -1,9 +1,8 @@
+var nconf = require('nconf') ;
 var AWS = require("aws-sdk");
 
-AWS.config.update({
-  region: "us-east-1",
-  endpoint: "http://localhost:8000"
-});
+nconf.file({file: 'db-config.json'}) ;
+AWS.config.update(nconf.get("aws-config"));
 
 var dynamodb = new AWS.DynamoDB();
 

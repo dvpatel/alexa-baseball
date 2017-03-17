@@ -3,20 +3,21 @@
  */
 
 var uuid=require('uuid/v4') ;
+
 var fs = require('fs');
 var parse = require('csv-parse');
 var async = require('async');
 
+var nconf = require('nconf') ;
+nconf.file({file: 'db-config.json'}) ;
+ 
 var AWS = require("aws-sdk");
-AWS.config.update({
-    region: "us-east-1",
-    endpoint: "http://localhost:8000"
-});
+AWS.config.update(nconf.get("aws-config"));
+
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-
 //  Data file
-var dataFile = "../data/Batting.csv" ;
+var dataFile = nconf.get("batting-data") ;
 
 console.log("Importing batting data into DynamoDB. Please wait.");
 

@@ -1,13 +1,13 @@
 {
   "name": "alexa-baseball",
   "version": "0.1.0",
-  "description": "Data import and samples for Alexa Baseball skill",
+  "description": "Data import scripts Alexa Baseball skill",
   "dependencies": {
     "aws-sdk": "*",
     "async": "*",
     "csv-parse": "*",
     "uuid": "*",
-    "fs":"*"
+    "nconf":"*"
   },
   "engines": {
     "node": "*"

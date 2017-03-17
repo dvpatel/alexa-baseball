@@ -1,0 +1,10 @@
+{
+  "aws-config": {
+    "region": "us-east-1",
+    "endpoint": "http://localhost:8000"
+  },
+  "batting-data":"../data/Batting-Mini.csv",
+  "players-data":"../data/Master-Mini.csv",
+  "teams-data":"../data/Teams.csv",
+  "franchise-data":"../data/TeamsFranchises.csv"
+}

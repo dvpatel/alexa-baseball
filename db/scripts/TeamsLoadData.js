@@ -7,11 +7,13 @@ var fs = require('fs');
 var parse = require('csv-parse');
 var async = require('async');
 
+var nconf = require('nconf') ;
+nconf.file({file: 'db-config.json'}) ;
+ 
 var AWS = require("aws-sdk");
-AWS.config.update({
-    region: "us-east-1",
-    endpoint: "http://localhost:8000"
-});
+AWS.config.update(nconf.get("aws-config"));
+
+
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 console.log("Importing teams data into DynamoDB. Please wait.");
@@ -20,7 +22,8 @@ console.log("Importing teams data into DynamoDB. Please wait.");
  * Load Teams franchise data to create a map / lookup table between teamID and franchiseID.  
  * This mapping is necessary to lookup franchise name ;
  */
-var franFile = "../data/TeamsFranchises.csv" ;
+var franFile = nconf.get("franchise-data") ;
+
 var fmap = {} ;
 fs.createReadStream(franFile).pipe(parse({ columns : true, delimiter : ','}, 
 	function(err, data) {	
@@ -32,7 +35,8 @@ fs.createReadStream(franFile).pipe(parse({ columns : true, delimiter : ','},
 ) ;
 
 //  Teams Data file
-var teamsFile = "../data/Teams.csv" ;
+var teamsFile = nconf.get("teams-data") ;
+
 var rs = fs.createReadStream(teamsFile);
 var parser = parse({
     columns : true,

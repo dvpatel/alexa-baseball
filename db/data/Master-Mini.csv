@@ -1,0 +1,9 @@
+playerID,birthYear,birthMonth,birthDay,birthCountry,birthState,birthCity,deathYear,deathMonth,deathDay,deathCountry,deathState,deathCity,nameFirst,nameLast,nameGiven,weight,height,bats,throws,debut,finalGame,retroID,bbrefID
+ruthba01,1895,2,6,USA,MD,Baltimore,1948,8,16,USA,NY,New York,Babe,Ruth,George Herman,215,74,L,L,1914-07-11,1935-05-30,ruthb101,ruthba01
+gehrilo01,1903,6,19,USA,NY,New York,1941,6,2,USA,NY,Bronx,Lou,Gehrig,Henry Louis,200,72,L,L,1923-06-15,1939-04-30,gehrl101,gehrilo01
+dimagjo01,1914,11,25,USA,CA,Martinez,1999,3,8,USA,FL,Hollywood,Joe,DiMaggio,Joseph Paul,193,74,R,R,1936-05-03,1951-09-30,dimaj101,dimagjo01
+jacksre01,1946,5,18,USA,PA,Abington,,,,,,,Reggie,Jackson,Reginald Martinez,195,72,L,L,1967-06-09,1987-10-04,jackr001,jacksre01
+aaronha01,1934,2,5,USA,AL,Mobile,,,,,,,Hank,Aaron,Henry Louis,180,72,R,R,1954-04-13,1976-10-03,aaroh101,aaronha01
+bondsba01,1964,7,24,USA,CA,Riverside,,,,,,,Barry,Bonds,Barry Lamar,185,73,L,L,1986-05-30,2007-09-26,bondb001,bondsba01
+mcgwima01,1963,10,1,USA,CA,Pomona,,,,,,,Mark,McGwire,Mark David,215,77,R,R,1986-08-22,2001-10-07,mcgwm001,mcgwima01
+marisro01,1934,9,10,USA,MN,Hibbing,1985,12,14,USA,TX,Houston,Roger,Maris,Roger Eugene,197,72,L,R,1957-04-16,1968-09-29,marir101,marisro01

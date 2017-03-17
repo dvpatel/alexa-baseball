@@ -2,20 +2,20 @@
  * Import players data from data/Master.csv file
  */
 
-var AWS = require("aws-sdk");
-
 var fs = require('fs');
+
+var nconf = require('nconf') ;
+nconf.file({file: 'db-config.json'}) ;
+
+var AWS = require("aws-sdk");
+AWS.config.update(nconf.get("aws-config"));
+ 
 var parse = require('csv-parse');
 var async = require('async');
 
-AWS.config.update({
-    region: "us-east-1",
-    endpoint: "http://localhost:8000"
-});
-
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var dataFile = "../data/Master.csv" ;
+var dataFile = nconf.get("players-data") ;
 
 console.log("Importing players data into DynamoDB. Please wait.");
 
