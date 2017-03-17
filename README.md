@@ -9,7 +9,7 @@ System Requirements:
 *  AWS DynamoDB (remote or local)
 *  Modules in data/scripts/package.json
 
-Quick Run-time
+## Installation & Setup
 -------------------
 Code Access:  
 *  git clone https://github.com/dvpatel/alexa-baseball.git
@@ -28,6 +28,7 @@ Create DynamoDB Tables.
 *  node PlayersCreateTable.js
 *  node BattingCreateTable.js
 *  node TeamsCreateTable.js
+
 This script will create players and batting tables in DynamoDB. 
 
 Import players and batting data.  The data repository is from baseball data bank maintained by Sean Lahaman.
@@ -35,7 +36,9 @@ Import players and batting data.  The data repository is from baseball data bank
 *  node BattingLoadData.js
 *  node TeamsLoadData.js
 
-To run samples:
+## Code Eamples
+-------------------
+
 *  cd samples folder.
 *  npm install
 
