@@ -4,7 +4,7 @@
  */
 
 var async = require('async');
-var Util = require("../db/scripts/Util");
+var dbutil = require("../lib/dbutil");
 
 /*
  * Set start and end year with defaults 2015  2016
@@ -26,7 +26,7 @@ function homeruns(callback) {
     async.each(yrRange,
         function(yr, cb) {
 
-            Util.topHomerunsByYear(yr, function(err, data) {
+            dbutil.topHomerunsByYear(yr, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
@@ -48,7 +48,7 @@ function playerLookup(results, callback) {
     async.each(results,
         function(item, cb) {
 
-            Util.playerLookup(item.playerID, function(err, data) {
+            dbutil.playerLookup(item.playerID, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
@@ -73,7 +73,7 @@ function teamNameLookup(hr_items, callback) {
     async.each(hr_items,
         function(item, cb) {
 
-            Util.teamNameLookup(item.teamID, item.yearID, function(err, data) {
+            dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {

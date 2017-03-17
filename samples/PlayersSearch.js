@@ -3,14 +3,14 @@
  *  Find player given last name
  */
 
-var Util = require("../db/scripts/Util");
+var dbutil = require("../lib/dbutil");
 
 /*
  * Input last name
  */
 var inpLastname = (process.argv[2] || "Ortiz") ;
 
-Util.playerLookupByName(inpLastname, function(err, data) {
+dbutil.playerLookupByName(inpLastname, function(err, data) {
 
     if (err) {
         console.error(err) ;

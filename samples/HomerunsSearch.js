@@ -4,7 +4,7 @@
  */
 
 //  DB utility for homerns lookup
-var Util = require('../db/scripts/Util') ;
+var dbutil = require('../lib/dbutil') ;
 var async = require('async');
 
 /*
@@ -18,7 +18,7 @@ var inpHR = (process.argv[3] || 20)-0 ;
  */
 function homeruns(callback) {
     
-    Util.homeruns(inpYear, inpHR, 15, function(err, data) {
+    dbutil.homeruns(inpYear, inpHR, 15, function(err, data) {
         if (err) {
             console.error(err) ;
         } else {
@@ -36,7 +36,7 @@ function playerLookup(hr_items, callback) {
     async.each(hr_items,
         function(item, cb) {
 
-            Util.playerLookup(item.playerID, function(err, data) {
+            dbutil.playerLookup(item.playerID, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
@@ -59,7 +59,7 @@ function teamNameLookup(hr_items, callback) {
     async.each(hr_items,
         function(item, cb) {
 
-            Util.teamNameLookup(item.teamID, item.yearID, function(err, data) {
+            dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
