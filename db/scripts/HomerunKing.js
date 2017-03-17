@@ -4,14 +4,7 @@
  */
 
 var async = require('async');
-var AWS = require("aws-sdk");
-
-AWS.config.update({
-  region: "us-east-1",
-  endpoint: "http://localhost:8000"
-});
-
-var docClient = new AWS.DynamoDB.DocumentClient();
+var Util = require("./Util");
 
 /*
  * Set start and end year with defaults 2015  2016
@@ -21,28 +14,7 @@ var endYear = (process.argv[3] || 2016)-0 ;
 var n = endYear - startYear ; 
 
 /*
- * Table configuration.  Note ScanIndexForward value of false.  This is needed to retrieve sorted results from DynamoDB.
- */
-var battingParams = {
-    TableName : "Batting",
-    IndexName : "HomerunsIndex",
-    KeyConditionExpression: "yearID = :yr",
-    ExpressionAttributeValues: {
-         ":yr": endYear,
-    },
-    ScanIndexForward: false,
-    Limit: 1,
-} ;
-
-var playerParams = {
-    TableName : "Players",
-    Key:{
-        playerID: ""
-    },
-} ;
-
-/*
- * get home runs and playerID for given range
+ * Chain 1:  get home runs and playerID for given range
  */
 function homeruns(callback) {
     var yrRange = [] ;
@@ -53,17 +25,15 @@ function homeruns(callback) {
     var results = [] ;
     async.each(yrRange,
         function(yr, cb) {
-            battingParams.ExpressionAttributeValues[":yr"] = yr ;
 
-            docClient.query(battingParams, function(err, data) {
+            Util.topHomerunsByYear(yr, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
-                    results.push(data.Items[0]) ;
+	            results.push(data.Items[0]) ;
                 }
-
                 cb() ;
-            });
+            }) ;
 
         }, function(err) {
 	    callback(null, results) ;
@@ -72,28 +42,52 @@ function homeruns(callback) {
 }
 
 /*
- * for each playerID, lookup player name from Players table
+ * Chain 2:  for each playerID, lookup player name from Players table
  */
 function playerLookup(results, callback) {
-    var playerMap = {} ;
     async.each(results,
         function(item, cb) {
-            playerParams.Key.playerID = item.playerID ;
-            docClient.get(playerParams, function(err, data) {
+
+            Util.playerLookup(item.playerID, function(err, data) {
                 if (err) {
                     console.error(err) ;
                 } else {
-                	playerMap[item.playerID] = data.Item.firstName + " " + data.Item.lastName ;
+                    item.fullName = data.Item.fullName ;
                 }
                 
                 cb() ;               
-            });
-            
+            }) ;
+
         }, function(err) {
-        	callback(null, results, playerMap) ;
+            callback(null, results) ;
         }
     ) ;
 }
+
+
+/*
+ * Chain 3:  function to lookup team name based on playerID and yearID 
+ */
+function teamNameLookup(hr_items, callback) {
+    var r = {} ;
+    async.each(hr_items,
+        function(item, cb) {
+
+            Util.teamNameLookup(item.teamID, item.yearID, function(err, data) {
+                if (err) {
+                    console.error(err) ;
+                } else {
+                    item.franchiseName = data.Item.franchiseName ;
+                }
+                cb() ;
+            }) ;
+
+        }, function(err) {
+                callback(null, hr_items) ;
+        }
+    ) ;
+}
+
 
 /*
  * Calling function.  Chained to get homerun data for specific
@@ -102,12 +96,19 @@ function playerLookup(results, callback) {
 (function() {
     async.waterfall([ 
         homeruns,
-        playerLookup
-    ], function(error, nr, players) {
+        playerLookup,
+        teamNameLookup
+    ], function(error, nr) {
 
 	nr.sort(function(a,b) { return b.HR - a.HR ; } ) ;
         for (var i = 0; i < nr.length; i++) {
-    	    console.log(nr[i].HR + " -  " + players[nr[i].playerID]+ ", " + nr[i].yearID) ;
+
+	    var hr = nr[i].HR ;
+	    var fullName = nr[i].fullName ;
+            var yearID = nr[i].yearID ;
+            var teamName = nr[i].franchiseName ;
+
+    	    console.log(hr + " -  " + fullName+ ", " + yearID + ", " + teamName ) ;
         }
     })
 })() ;

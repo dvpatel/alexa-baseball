@@ -53,6 +53,7 @@ var parser = parse({
             var batting = {} ;
             batting["naturalID"] = uuid() ;  //  used for partition ID
             batting.playerID = b.playerID ;  //  range key
+            batting.teamID = b.teamID ;  //  range key
             batting.yearID = parseInt(b.yearID) || 0 ;  // forcing imported data to be a number;  default to 0 if value is null or empty
 
             batting.HR = parseInt(b.HR) || 0 ;
