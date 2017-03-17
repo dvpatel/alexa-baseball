@@ -1,7 +1,7 @@
 # alexa-baseball
 Baseball home runs data and samples for Alexa
 
-#System Requirements:
+##System Requirements:
 *  NodeJS +6x
 *  Java +6.X (for DynamoDB local)
 *  AWS DynamoDB (remote or local)
