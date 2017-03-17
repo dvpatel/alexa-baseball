@@ -1,16 +1,13 @@
 # alexa-baseball
--------------------
 Baseball home runs data and samples for Alexa
 
-System Requirements:
--------------------
+#System Requirements:
 *  NodeJS +6x
 *  Java +6.X (for DynamoDB local)
 *  AWS DynamoDB (remote or local)
 *  Modules in data/scripts/package.json
 
 ## Installation & Setup
--------------------
 Code Access:  
 *  git clone https://github.com/dvpatel/alexa-baseball.git
 
@@ -36,8 +33,7 @@ Import players and batting data.  The data repository is from baseball data bank
 *  node BattingLoadData.js
 *  node TeamsLoadData.js
 
-## Code Eamples
--------------------
+## Code Examples
 
 *  cd samples folder.
 *  npm install
