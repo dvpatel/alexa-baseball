@@ -21,21 +21,21 @@ Instructions:  http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/D
 
 Create DynamoDB Tables.
 *  cd db/scripts folder
-*  npm install
+*  edit db-config.json for local or aws configuration and data files
 *  node PlayersCreateTable.js
 *  node BattingCreateTable.js
 *  node TeamsCreateTable.js
 
-This script will create players and batting tables in DynamoDB. 
+This script will create players, batting, and teams tables in DynamoDB. 
 
-Import players and batting data.  The data repository is from baseball data bank maintained by Sean Lahaman.
+Import data.  The data repository is from baseball data bank maintained by Sean Lahaman.
 *  node PLayersLoadData.js
 *  node BattingLoadData.js
 *  node TeamsLoadData.js
 
 ## Code Examples
 
-*  cd samples folder.
+*  cd lambda folder.
 *  npm install
 
 To get top home runs hitters for a given time range:
@@ -46,3 +46,11 @@ To get all players with greater than "n" home runs in a given year:
 
 And to search players by last name:
 *  node PlayersSearch.js Bonds
+
+## Lambda Examples
+*  Tables / data required to be loaded on AWS
+*  Make sure you have the right Lamba role setup in IAM, including permission to read DynamoDB
+*  edit add-homerunking-lambda.sh to point to location of homerunking.zip file
+*  call add-homerunking-lambda.sh
+*  To invoke lambda, call invoke-homerunking-lambda.sh
+*  To delete lambda function from AWS, call del-homerunking-lambda.sh
