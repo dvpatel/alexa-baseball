@@ -1,0 +1,24 @@
+{
+  "name": "alexa-baseball",
+  "version": "0.1.0",
+  "description": "Alexa Baseball skill",
+  "dependencies": {
+    "alexa-sdk": "^1.0.7",
+    "async": "*",
+<<<<<<< HEAD
+    "aws-sdk": "*",
+    "nconf": "*"
+=======
+    "aws-sdk":"*",
+    "alexa-sdk":"*",
+    "nconf":"*"
+>>>>>>> edd0dc033bdda8bebaa3786c53dd765f50e84371
+  },
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Dipesh Patel"
+}

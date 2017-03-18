@@ -10,6 +10,19 @@
       ]
     },
     {
+      "intent": "GetMostHomerunsByYears",
+      "slots": [
+        {
+          "name": "StartDate",
+          "type": "AMAZON.DATE"
+        },
+        {
+          "name": "EndDate",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
       "intent": "GetHomeruns",
       "slots": [
         {

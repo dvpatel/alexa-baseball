@@ -11,15 +11,19 @@
   },
   "request": {
     "type": "IntentRequest",
-    "requestId": "EdwRequestId.9404c2dc-bb97-43cd-b85c-33dccb6fae06",
+    "requestId": "EdwRequestId.f8500f8a-5bd3-4756-9bad-b7f0f9b285ad",
     "locale": "en-US",
-    "timestamp": "2017-03-18T15:52:22Z",
+    "timestamp": "2017-03-18T16:12:34Z",
     "intent": {
-      "name": "GetMostHomeruns",
+      "name": "GetMostHomerunsByYears",
       "slots": {
-        "Date": {
-          "name": "Date",
-          "value": "2017-03-14"
+        "StartDate": {
+          "name": "StartDate",
+          "value": "1999"
+        },
+        "EndDate": {
+          "name": "EndDate",
+          "value": "2009"
         }
       }
     }
