@@ -5,6 +5,9 @@
   "dependencies": {
     "alexa-sdk": "^1.0.7",
     "async": "*",
+    "aws-sdk":"*",
+    "alexa-sdk":"*",
+    "nconf":"*"
     "aws-sdk": "*",
     "nconf": "*"
   },

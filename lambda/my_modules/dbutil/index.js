@@ -6,9 +6,9 @@
 var fs = require('fs');
 var AWS = require('aws-sdk');
 
-module.exports = function(config) {
+module.exports = function(awsConfig) {
 
-AWS.config.update(config) ;
+AWS.config.update(awsConfig) ;
 var docClient = new AWS.DynamoDB.DocumentClient();
 
 var module = {} ;
