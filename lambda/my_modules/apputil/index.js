@@ -177,8 +177,8 @@ module.exports = function(awsConfig) {
 	                } else {
 	                    item.fullName = data.Item.fullName ;
 	                }
+	                cb() ;               
 	            }) ;
-	            cb() ;               
 	        }, function(err) {
 	            callback(null, results) ;
 	        }

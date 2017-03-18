@@ -75,10 +75,15 @@ module.playerLookup = function(playerID, callback) {
     } ;
 
     docClient.get(params, function(err, data) {
-        if (!err) 
+
+        if (!err)  {
 	    data.Item["fullName"] = data.Item.firstName + " " + data.Item.lastName ;
+            callback(err, data) ;
+        } else {
+            console.log("Error!.") ;
+            callback("Error with player lookup.") ;
+        }
 	
-        callback(err, data) ;
     });
 }
 
