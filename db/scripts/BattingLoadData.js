@@ -96,14 +96,29 @@ var parser = parse({
             }
         } ;
 
-        /*
-         * Batch import blocks of data for batting
-         */
-        docClient.batchWrite(params, function(err, data) {
+
+        var bwCallback = function(err, data) {
             if (err) {
                 console.log(err) ;
-            } 
-        });
+            } else {
+
+               /*
+                *  Logic for batch retry
+                */
+               if (!(Object.keys(data.UnprocessedItems).length === 0)) {
+                   console.log("Retry...") ;
+                   var params = {};
+                   params.RequestItems = data.UnprocessedItems;
+                   console.log(JSON.stringify(params)) ;
+                   docClient.batchWrite(params, bwCallback);
+               }
+            }
+        }
+
+        /*
+         * Batch import blocks of data for teams
+         */
+        docClient.batchWrite(params, bwCallback) ;
 
         /*
          * signal completion of async op

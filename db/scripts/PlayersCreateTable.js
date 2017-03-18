@@ -22,7 +22,7 @@ var params = {
         { AttributeName: "playerID", AttributeType: "S" },
         { AttributeName: "lastName", AttributeType: "S" },
     ],
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+    ProvisionedThroughput: { ReadCapacityUnits: 10, WriteCapacityUnits: 10 },
     GlobalSecondaryIndexes: [
       {
         IndexName : "LastnameIndex",
@@ -32,7 +32,7 @@ var params = {
         Projection: {
             ProjectionType: "ALL"
         },
-        ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits:1 },
+        ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
       }
     ],
 };

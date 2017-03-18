@@ -90,14 +90,30 @@ var parser = parse({
             }
         } ;
 
-        /*
-         * Batch import players data
-         */
-        docClient.batchWrite(params, function(err, data) {
+
+        var bwCallback = function(err, data) {
             if (err) {
-                console.log("Error: " + err) ;
+                console.log(err) ;
+            } else {
+
+               /*
+                *  Logic for batch retry
+                */
+               if (!(Object.keys(data.UnprocessedItems).length === 0)) {
+                   var params = {};
+                   params.RequestItems = data.UnprocessedItems;
+                   console.log("Retry...") ;
+                   console.log(JSON.stringify(params)) ;
+                   docClient.batchWrite(params, bwCallback);
+               }
             }
-        });
+        }
+
+        /*
+         * Batch import blocks of data for teams
+         */
+        docClient.batchWrite(params, bwCallback) ;
+
 
         /*
          * Signal async ops completed.

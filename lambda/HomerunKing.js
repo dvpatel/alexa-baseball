@@ -14,13 +14,14 @@ var dbutil = require('./my_modules/dbutil')(nconf.get('aws-config')) ;
  */
 var startYear = (process.argv[2] || 2015)-0 ;
 var endYear = (process.argv[3] || 2016)-0 ;
-var n = endYear - startYear ; 
 
 /*
  * Chain 1:  get home runs and playerID for given range
  */
 function homeruns(callback) {
     var yrRange = [] ;
+    var n = endYear - startYear ; 
+
     for (var i = 0; i < n; i++) {
 	yrRange.push(endYear - i) ;	
     }
@@ -75,7 +76,6 @@ function teamNameLookup(hr_items, callback) {
     var r = {} ;
     async.each(hr_items,
         function(item, cb) {
-
             dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
                 if (err) {
                     console.error(err) ;
@@ -84,7 +84,6 @@ function teamNameLookup(hr_items, callback) {
                 }
                 cb() ;
             }) ;
-
         }, function(err) {
                 callback(null, hr_items) ;
         }

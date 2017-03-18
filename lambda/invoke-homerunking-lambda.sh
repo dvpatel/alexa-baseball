@@ -3,5 +3,5 @@ aws --debug lambda invoke \
 --function-name homerunking \
 --region us-east-1 \
 --log-type Tail \
---payload '{"key1":"bar", "key2":"y", "key3":"down"}' \
+--payload '{"startYear":"1919", "endYear":"1929"}' \
 outputfile.txt

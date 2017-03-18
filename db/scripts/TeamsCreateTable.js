@@ -15,13 +15,13 @@ var params = {
     TableName : "Teams",
     KeySchema: [       
         { AttributeName: "teamID", KeyType: "HASH"},  //Partition key
-        { AttributeName: "yearID", KeyType: "RANGE"},  //Partition key        
+        { AttributeName: "yearID", KeyType: "RANGE"},  //Range key        
         ],
     AttributeDefinitions: [       
         { AttributeName: "teamID", AttributeType: "S" },
         { AttributeName: "yearID", AttributeType: "N" },
         ],
-    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+    ProvisionedThroughput: { ReadCapacityUnits: 10, WriteCapacityUnits: 10 },
 };
 
 /*

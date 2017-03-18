@@ -63,7 +63,7 @@ var parser = parse({
         //  pre-process
     	for (var i = 0; i < item_data.length; i++) {
     		
-    		//yearID,teamID,franchID
+    	    //yearID,teamID,franchID
     		
             var t = item_data[i] ;
             
@@ -72,7 +72,7 @@ var parser = parse({
             team["yearID"] = parseInt(t.yearID) || 0;
             team["franchiseID"] = t.franchID ;
             team["franchiseName"] = fmap[t.franchID] ;
-                        
+
             /*
              * dynamodb specific data structure
              */
@@ -90,14 +90,28 @@ var parser = parse({
             }
         } ;
 
+        var bwCallback = function(err, data) {
+            if (err) {
+                console.log(err) ;
+            } else {
+
+	       /*
+                *  Logic for batch retry
+                */
+               if (!(Object.keys(data.UnprocessedItems).length === 0)) {
+                   var params = {};
+                   params.RequestItems = data.UnprocessedItems;
+                   console.log("Retry...") ;
+		   console.log(JSON.stringify(params)) ;
+                   docClient.batchWrite(params, bwCallback);
+               }
+            }
+        }
+
         /*
          * Batch import blocks of data for teams
          */
-        docClient.batchWrite(params, function(err, data) {
-            if (err) {
-                console.log(err) ;
-            } 
-        });
+        docClient.batchWrite(params, bwCallback) ;
 
         /*
          * signal completion of async op
