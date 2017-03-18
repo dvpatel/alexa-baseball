@@ -48,14 +48,47 @@ var handlers =  {
 	    	    	    var yearID = data[i].yearID ;
 	    	    	    var teamName = data[i].franchiseName ;
 
-	                    result = fullName + " had " + hr + " home runs in " + yearID ;
+	                    result = fullName + " had the most home runs at " + hr + " in " + yearID ;
 	    	        }
 	    	        self.emit(':tell', result);
 	    		}			
 	    		
 	    	}) ;
 	        
+	    },	    
+	    /*
+	     * Get top homeruns hitter for a given year.
+	     */
+	    'MostHomerunsByYearsIntent': function () {	    	
+	    	
+	        var startYear = this.event.request.intent.slots.startYear.value - 0 ;
+	        var endYear = this.event.request.intent.slots.endYear.value - 0 ;
+
+            var self = this ;            
+	    	apputil.maxHomerunByYears(startYear, endYear, function(err, data) {		
+	    		
+	    		if (err) {
+	    		    console.log(JSON.stringify(err)) ;
+	    		    callback(new Error(err));
+	    		} else {
+
+	    			var i = 0 ;
+    	    	    var hr = data[i].HR ;
+    	    	    var fullName = data[i].fullName ;
+    	    	    var yearID = data[i].yearID ;
+    	    	    var teamName = data[i].franchiseName ;
+
+                    var result = "The home run king between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + hr + " home runs in " + yearID ;
+                    
+	    	        self.emit(':tell', result);
+	    		}			
+	    		
+	    	}) ;
+	        
 	    },
+
+	    
+	    
 	    
 	    'Unhandled': function() {
 	        console.log("UNHANDLED");
