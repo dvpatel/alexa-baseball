@@ -9,9 +9,70 @@ module.exports = function(awsConfig) {
 
 	var dbutil = dbm(awsConfig) ;
 	var module = {} ;
+
+	/*
+	 * Lookup player by last name ;
+	 */
+	module.playerLookupByName = function(inpLastname, appCallback) {	
+
+		if (!inpLastname) {
+			var error = "ERROR:  Please provide last name." ;
+			appCallback(error, null) ;		
+			return ;
+		}
+		
+		dbutil.playerLookupByName(inpLastname, function(err, data) {
+			appCallback(err, data.Items) ;		    	
+		}) ;
+	}
 	
-	
-	
+	/*
+	 * Find top homeruns hitter for a given year
+	 */
+	module.topHomerunsForYear = function(inpYear, inpHR, appCallback) {
+		var currentTime = new Date()
+		var currentYear = currentTime.getFullYear()
+		if (inpYear > currentYear) {
+			var error = "ERROR:  Current year is " + currentYear + ", not " + endYear + ".  Not there yet." ;
+			appCallback(error, null) ;		
+			return ;
+		}
+
+		if (inpYear < 1871) {
+			var error = "ERROR:  Basbeall did not exisit before " + startYear + ".  Please enter value greater than 1871." ;
+			appCallback(error, null) ;		
+			return ;			
+		}
+
+		if (inpHR < 0 || inpHR > 100) {
+			var error = "ERROR:  Please enter valid homeruns (more than 0, less than 100.)" ;
+			appCallback(error, null) ;		
+			return ;			
+		}
+		
+		/*
+		 * First chained function to get home runs based on inputed values and results constraint
+		 */
+		function homeruns(callback) {
+		    
+		    dbutil.homeruns(inpYear, inpHR, 15, function(err, data) {
+		        if (err) {
+		            console.error(err) ;
+		        } else {
+		        	callback(null, data.Items) ;
+		        }
+		    }) ;
+
+		}
+		
+	    async.waterfall([ 
+	        homeruns,
+	        playerLookup,
+	        teamNameLookup
+	    ], function(error, data) {	    		    	
+	    	appCallback(error, data) ;	    	
+	    }) ;
+	}
 	
 	
 	/*
@@ -40,9 +101,6 @@ module.exports = function(awsConfig) {
 			return ;			
 		}
 		
-		/*
-		 * Chain 1:  get home runs and playerID for given range
-		 */
 		function homeruns(callback) {
 		    var yrRange = [] ;
 		    var n = endYear - startYear ; 
@@ -72,48 +130,6 @@ module.exports = function(awsConfig) {
 		    ) ;
 		}
 		
-		/*
-		 * Chain 2:  for each playerID, lookup player name from Players table
-		 */
-		function playerLookup(results, callback) {
-
-		    async.each(results,
-		        function(item, cb) {
-		            dbutil.playerLookup(item.playerID, function(err, data) {
-		                if (err) {
-		                    console.error(err) ;
-		                } else {
-		                    item.fullName = data.Item.fullName ;
-		                }
-		            }) ;
-		            cb() ;               
-		        }, function(err) {
-		            callback(null, results) ;
-		        }
-		    ) ;
-		}
-
-		/*
-		 * Chain 3:  function to lookup team name based on playerID and yearID 
-		 */
-		function teamNameLookup(hr_items, callback) {
-		    var r = {} ;
-		    async.each(hr_items,
-		        function(item, cb) {
-		            dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
-		                if (err) {
-		                    console.error(err) ;
-		                } else {
-		                    item.franchiseName = data.Item.franchiseName ;
-		                }
-		                cb() ;
-		            }) ;
-		        }, function(err) {
-		                callback(null, hr_items) ;
-		        }
-		    ) ;
-		}
-		
 	    async.waterfall([ 
 	        homeruns,
 	        playerLookup,
@@ -121,14 +137,53 @@ module.exports = function(awsConfig) {
 	    ], function(error, nr) {
 	    	
 	    	//  Sort the results and return ;
-	    	nr.sort(function(a,b) { return b.HR - a.HR ; } ) ;	    	
-	    	
+	    	nr.sort(function(a,b) { return b.HR - a.HR ; } ) ;	    		    	
 	    	appCallback(error, nr) ;
+	    	
 	    }) ;		
 	}
 	
+	/*
+	 * function to lookup team name based on playerID and yearID 
+	 */
+	function teamNameLookup(hr_items, callback) {
+	    var r = {} ;
+	    async.each(hr_items,
+	        function(item, cb) {
+	            dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
+	                if (err) {
+	                    console.error(err) ;
+	                } else {
+	                    item.franchiseName = data.Item.franchiseName ;
+	                }
+	                cb() ;
+	            }) ;
+	        }, function(err) {
+	                callback(null, hr_items) ;
+	        }
+	    ) ;
+	}
 	
-	
+	/*
+	 * for each playerID, lookup player name from Players table
+	 */
+	function playerLookup(results, callback) {
+
+	    async.each(results,
+	        function(item, cb) {
+	            dbutil.playerLookup(item.playerID, function(err, data) {
+	                if (err) {
+	                    console.error(err) ;
+	                } else {
+	                    item.fullName = data.Item.fullName ;
+	                }
+	            }) ;
+	            cb() ;               
+	        }, function(err) {
+	            callback(null, results) ;
+	        }
+	    ) ;
+	}
 
 	return module ;
 } ;
