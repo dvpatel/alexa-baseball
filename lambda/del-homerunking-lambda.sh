@@ -1,1 +1,1 @@
-aws lambda delete-function --function-name homerunking --region us-east-1
+aws lambda delete-function --function-name HomerunKingLambda --region us-east-1

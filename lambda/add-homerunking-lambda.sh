@@ -8,7 +8,7 @@ zip -r ./homerunking.zip config.json HomerunKingLambda.js my_modules/ node_modul
 
 aws lambda create-function \
 --region us-east-1 \
---function-name homerunking \
+--function-name HomerunKingLambda \
 --zip-file fileb:///Users/dipesh/Development/workspace/alexa-baseball/lambda/homerunking.zip \
 --role arn:aws:iam::723307513402:role/AlexaLambda \
 --handler HomerunKingLambda.handler \
