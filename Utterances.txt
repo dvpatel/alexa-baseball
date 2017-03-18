@@ -1,0 +1,10 @@
+GetMostHomeruns The most home runs on {Date}
+GetMostHomeruns Who hit the most home runs in {Date}
+GetMostHomeruns Who hit the most home runs on {Date}
+GetMostHomeruns Who hit the most home runs {Date}
+GetMostHomeruns Who has the most home runs
+GetHomeruns How many home runs did {player} hit
+GetHomeruns How many home runs did {player} hit on {Date}
+GetHomeruns How many home runs did {player} hit  {Date}
+GetHomeruns How many home runs does {player} have
+GetHomeruns How many home runs has {player} hit

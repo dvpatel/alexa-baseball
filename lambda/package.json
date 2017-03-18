@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "description": "Alexa Baseball skill",
   "dependencies": {
+    "alexa-sdk": "^1.0.7",
     "async": "*",
-    "aws-sdk":"*",
-    "nconf":"*"
+    "aws-sdk": "*",
+    "nconf": "*"
   },
   "engines": {
     "node": "*"

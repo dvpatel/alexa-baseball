@@ -1,0 +1,26 @@
+{
+  "intents": [
+    {
+      "intent": "GetMostHomeruns",
+      "slots": [
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+      "intent": "GetHomeruns",
+      "slots": [
+        {
+          "name": "player",
+          "type": "LIST_OF_PLAYERS"
+        },
+        {
+          "name": "Date",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    }
+  ]
+}
