@@ -38,7 +38,7 @@ var params = {
         Projection: {
             ProjectionType: "ALL"
         },
-        ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
+        ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
       }
     ],
 };
