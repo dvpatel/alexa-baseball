@@ -1,23 +1,23 @@
 {
   "intents": [
     {
-      "intent": "GetMostHomeruns",
+      "intent": "HomerunKingForYearIntent",
       "slots": [
         {
-          "name": "Date",
+          "name": "givenYear",
           "type": "AMAZON.DATE"
         }
       ]
     },
     {
-      "intent": "GetMostHomerunsByYears",
+      "intent": "MostHomerunsByYearsIntent",
       "slots": [
         {
-          "name": "StartDate",
+          "name": "startDate",
           "type": "AMAZON.DATE"
         },
         {
-          "name": "EndDate",
+          "name": "endDate",
           "type": "AMAZON.DATE"
         }
       ]

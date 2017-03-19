@@ -2,6 +2,16 @@
 var Alexa = require("alexa-sdk");
 var appId = '';//app specific
 
+/* external dependencies*/
+var async = require('async');
+
+var nconf = require('nconf') ;
+nconf.file({file: 'config.json'}) ;
+
+var awsConfig = nconf.get('aws-config') ;
+var apputilmod = require('./my_modules/apputil') ;
+var apputil = apputilmod(awsConfig) ;
+/* end external dependencies */
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
