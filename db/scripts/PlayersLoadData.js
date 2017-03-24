@@ -46,25 +46,41 @@ var parser = parse({
             var p = item_data[i] ;
 
             /*
-             * Using only selected attributes from players file
-             * to save on AWS / DynamoDB network, storage, throughput costs
+             * playerID,birthYear,birthMonth,birthDay,birthCountry,birthState,birthCity,
+             * deathYear,deathMonth,deathDay,deathCountry,deathState,deathCity,
+             * nameFirst,nameLast,nameGiven,
+             * weight,height,bats,throws,debut,finalGame,retroID,bbrefID
              */
             var player = {}  ;
             player.playerID = p.playerID ;
-            player.firstName = p.nameFirst || "NO_DATA" ;
-            player.lastName = p.nameLast ;
-            player.givenName = p.nameGiven ;
+            player.firstName = (p.nameFirst || "NO_DATA").toLowerCase() ;
+            player.lastName = (p.nameLast || "NO_DATA").toLowerCase() ;
+            player.givenName = (p.nameGiven || "NO_DATA").toLowerCase() ;
+            
             player.birthYear = parseInt(p.birthYear) || 9999 ;
-
-	    /*
             player.birthMonth = parseInt(p.birthMonth) || 0 ;
             player.birthDay = parseInt(p.birthDay) || 0 ;
+            player.birthCountry = p.birthCountry || "NO_DATA" ;
+            player.birthState = p.birthState || "NO_DATA" ;
+            player.birtyCity = p.birthCity || "NO_DATA" ;            
+            
             player.deathYear = parseInt(p.deathYear) || 0 ;
             player.deathMonth = parseInt(p.deathMonth) || 0 ;
             player.deathDay = parseInt(p.deathDay) || 0 ;
+            player.deathCountry = p.deathCountry || "NO_DATA" ;
+            player.deathState = p.deathState || "NO_DATA" ;
+            player.deathCity = p.deathCity || "NO_DATA" ;            
+            
             player.weight = parseInt(p.weight) || 0 ;
             player.height = parseInt(p.height) || 0 ;
-            */
+
+            player.bats = p.bats || "NO_DATA" ;
+            player.throws = p.throws || "NO_DATA" ;
+
+            player.debut = p.debut || "1800-01-01" ;  //  1957-04-16,1968-09-29
+            player.finalGame = p.finalGame || "1800-01-01" ;  //1957-04-16,1968-09-29
+
+            //console.log(player) ;
 
             for (var key in player) {
               if (player.hasOwnProperty(key)) {

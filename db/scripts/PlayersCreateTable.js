@@ -21,6 +21,7 @@ var params = {
     AttributeDefinitions: [       
         { AttributeName: "playerID", AttributeType: "S" },
         { AttributeName: "lastName", AttributeType: "S" },
+        { AttributeName: "firstName", AttributeType: "S" },        
     ],
     ProvisionedThroughput: { ReadCapacityUnits: 10, WriteCapacityUnits: 10 },
     GlobalSecondaryIndexes: [
@@ -28,7 +29,8 @@ var params = {
         IndexName : "LastnameIndex",
         KeySchema : [
             { AttributeName: "lastName", KeyType: "HASH"},
-        ],
+            { AttributeName: "firstName", KeyType: "RANGE"},
+            ],
         Projection: {
             ProjectionType: "ALL"
         },

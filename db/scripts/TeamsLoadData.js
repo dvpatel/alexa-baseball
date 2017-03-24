@@ -22,6 +22,8 @@ console.log("Importing teams data into DynamoDB. Please wait.");
  * Load Teams franchise data to create a map / lookup table between teamID and franchiseID.  
  * This mapping is necessary to lookup franchise name ;
  */
+
+/*
 var franFile = nconf.get("franchise-data") ;
 
 var fmap = {} ;
@@ -33,6 +35,7 @@ fs.createReadStream(franFile).pipe(parse({ columns : true, delimiter : ','},
 		}
 	})
 ) ;
+*/
 
 //  Teams Data file
 var teamsFile = nconf.get("teams-data") ;
@@ -62,17 +65,23 @@ var parser = parse({
       
         //  pre-process
     	for (var i = 0; i < item_data.length; i++) {
-    		
-    	    //yearID,teamID,franchID
-    		
-            var t = item_data[i] ;
+
+    		/*  yearID,lgID,teamID,franchID,divID,
+    		 * Rank,G,Ghome,W,L,DivWin,WCWin,LgWin,WSWin,
+    		 * R,AB,H,2B,3B,HR,BB,SO,SB,CS,HBP,SF,RA,ER,ERA,
+    		 * CG,SHO,SV,IPouts,HA,HRA,BBA,SOA,E,DP,FP,name,
+    		 * park,attendance,BPF,PPF,teamIDBR,teamIDlahman45,teamIDretro
+    		 */
+
+    		var t = item_data[i] ;
             
             var team = {} ;
             team["teamID"] = t.teamID ;
             team["yearID"] = parseInt(t.yearID) || 0;
-            team["franchiseID"] = t.franchID ;
-            team["franchiseName"] = fmap[t.franchID] ;
-
+            team["divID"] = t.divID || "NO_DATA" ;
+            team["name"] = t.name || "NO_DATA" ;
+            team["park"] = t.park || "NO_DATA" ;
+            
             /*
              * dynamodb specific data structure
              */
@@ -102,7 +111,7 @@ var parser = parse({
                    var params = {};
                    params.RequestItems = data.UnprocessedItems;
                    console.log("Retry...") ;
-		   console.log(JSON.stringify(params)) ;
+                   console.log(JSON.stringify(params)) ;
                    docClient.batchWrite(params, bwCallback);
                }
             }

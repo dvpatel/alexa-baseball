@@ -39,7 +39,18 @@ var params = {
             ProjectionType: "ALL"
         },
         ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
-      }
+      },
+      {
+          IndexName : "HomerunsByPlayerIndex",
+          KeySchema : [
+              { AttributeName: "playerID", KeyType: "HASH"},
+              { AttributeName: "yearID", KeyType: "RANGE" }
+          ],
+          Projection: {
+              ProjectionType: "ALL"
+          },
+          ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
+        },      
     ],
 };
 

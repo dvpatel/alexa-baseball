@@ -31,7 +31,7 @@ var inpHR = (process.argv[3] || 20)-0 ;
 		} else {
 			for (var i = 0; i < hr_items.length; i++) {
 				var data = hr_items[i] ;
-				console.log(data.HR + " -  " + data.fullName+ ", " + data.yearID + ", " + data.franchiseName) ;
+				console.log(data.HR + " -  " + data.fullName+ ", " + data.yearID + ", " + data.name) ;
 			}
 		}
 	}) ;

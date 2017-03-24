@@ -1,8 +1,3 @@
-/*
- *   node HomerunsSearch 1975 25
- *   Get list of players with given HR for a given YEAR in HR order
- */
-
 var fs = require('fs');
 var AWS = require('aws-sdk');
 
@@ -33,10 +28,31 @@ module.homeruns = function(year, hr, limit, callback) {
 
     docClient.query(params, function(err, data) {
         callback(err, data) ;
-    });
-    
+    });    
 }
 
+
+/*
+ * Home runs by playerID and year
+ */
+module.homerunsByPlayerByYear = function(playerID, yearID, limit, callback) {
+    //  DB params
+    var params = {
+        TableName : "Batting",
+        IndexName : "HomerunsByPlayerIndex",
+        KeyConditionExpression: "playerID = :pid and yearID = :yid",
+        ExpressionAttributeValues: {
+            ":pid": playerID,
+            ":yid": yearID 
+        },
+        ScanIndexForward: false,
+        Limit: limit || 25,
+    } ;
+
+    docClient.query(params, function(err, data) {
+        callback(err, data) ;
+    });   
+}
 
 /*
  * First chained function to get home runs based on inputed values and results constraint
@@ -89,16 +105,17 @@ module.playerLookup = function(playerID, callback) {
 
 
 /*
- * Locate players by lastname
+ * Locate players by first and lastname
  */
-module.playerLookupByName = function(lastName, callback) {
+module.playerLookupByName = function(firstName, lastName, callback) {
 
     var params = {
         TableName : "Players",
         IndexName : "LastnameIndex",
-        KeyConditionExpression: "lastName = :ln",
+        KeyConditionExpression: "lastName = :ln and firstName = :fn",
         ExpressionAttributeValues: {
             ":ln": lastName,
+            ":fn": firstName
         }
     }
 
@@ -106,6 +123,27 @@ module.playerLookupByName = function(lastName, callback) {
         callback(err, data) ;
     }) ;
 }
+
+/*
+ * Locate players by lastname
+ */
+module.playerLookupByLastName = function(lastName, callback) {
+
+    var params = {
+        TableName : "Players",
+        IndexName : "LastnameIndex",
+        KeyConditionExpression: "lastName = :ln",
+        ExpressionAttributeValues: {
+            ":ln": lastName
+        }
+    }
+
+    docClient.query(params, function(err, data) {
+        callback(err, data) ;
+    }) ;
+}
+
+
 
 /*
  * Function to locate player based on playerID

@@ -11,20 +11,27 @@ module.exports = function(awsConfig) {
 	var module = {} ;
 
 	/*
+	 * Lookup player by first and last name ;
+	 */
+	module.playerLookupByName = function(inpFirstname, inpLastname, appCallback) {	
+		playerLookupByName(inpFirstname, inpLastname, appCallback);
+	}
+
+	/*
 	 * Lookup player by last name ;
 	 */
-	module.playerLookupByName = function(inpLastname, appCallback) {	
+	module.playerLookupByLastName = function(inpLastname, appCallback) {	
 
 		if (!inpLastname) {
-			var error = "ERROR:  Please provide last name." ;
+			var error = "ERROR:  Please provide first and last name." ;
 			appCallback(error, null) ;		
 			return ;
 		}
 		
-		dbutil.playerLookupByName(inpLastname, function(err, data) {
+		dbutil.playerLookupByLastName(inpLastname, function(err, data) {
 			appCallback(err, data.Items) ;		    	
 		}) ;
-	}
+	}	
 	
 	/*
 	 * Find top homeruns hitter for a given year
@@ -143,18 +150,71 @@ module.exports = function(awsConfig) {
 	    }) ;		
 	}
 	
+	
+	/*
+	 * Get home runs for a player using first and last name and year;
+	 */
+	module.homerunsByYearByPlayer = function(inpFirstname, inpLastname, inpYear, appCallback) {	
+
+		if (!inpFirstname || !inpLastname) {
+			var error = "ERROR:  Please provide first and last name." ;
+			appCallback(error, null) ;		
+			return ;
+		}
+
+		if (!inpYear) {
+			var error = "ERROR:  Please provide valid year." ;
+			appCallback(error, null) ;		
+			return ;
+		}
+		
+		function lookupPlayer(callback) {
+			playerLookupByName(inpFirstname, inpLastname, function(err, data) {							
+		        if (err) {
+		            console.error(err) ;
+		        } else {		        	
+		        	if (data.length > 0 && data[0].playerID) {
+			        	callback(null, data[0]) ;		        		
+		        	} else {
+		    			var error = "ERROR:  Cannot find playerID for " + inpFirstname + " " + inpLastname  ;
+		    			callback(error, null) ;
+		        	}		        	
+		        }				
+			}) ;	 
+		}
+
+		function lookupHomeruns(inp, callback) {			
+			var pid = inp.playerID ;			
+			dbutil.homerunsByPlayerByYear(pid, inpYear, 10, function(err, data) {
+		        if (err) {
+		            console.error(err) ;
+		        } else {
+		        	callback(null, data.Items) ;
+		        }				
+			}) ;			
+		}
+		
+	    async.waterfall([ 
+	        lookupPlayer,
+	        lookupHomeruns,
+	        teamNameLookup
+	    ], function(error, result) {	    	
+	    	appCallback(error, result) ;	    	
+	    }) ;   
+	}
+	
 	/*
 	 * function to lookup team name based on playerID and yearID 
 	 */
-	function teamNameLookup(hr_items, callback) {
+	function teamNameLookup(hr_items, callback) {				
 	    var r = {} ;
 	    async.each(hr_items,
 	        function(item, cb) {
 	            dbutil.teamNameLookup(item.teamID, item.yearID, function(err, data) {
 	                if (err) {
 	                    console.error(err) ;
-	                } else {
-	                    item.franchiseName = data.Item.franchiseName ;
+	                } else {	                	
+	                	item.name = data.Item.name ;	                    
 	                }
 	                cb() ;
 	            }) ;
@@ -163,6 +223,24 @@ module.exports = function(awsConfig) {
 	        }
 	    ) ;
 	}
+	
+	
+	/*
+	 * Lookup playerID by first and last name
+	 */
+	function playerLookupByName(inpFirstname, inpLastname, callback) {
+		
+		if (!inpFirstname || !inpLastname) {
+			var error = "ERROR:  Please provide first and last name." ;
+			appCallback(error, null) ;		
+			return ;
+		}
+		
+		dbutil.playerLookupByName(inpFirstname, inpLastname, function(err, data) {
+			callback(err, data.Items) ;		    	
+		}) ;
+	}
+
 	
 	/*
 	 * for each playerID, lookup player name from Players table

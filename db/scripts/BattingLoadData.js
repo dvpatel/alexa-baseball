@@ -49,36 +49,48 @@ var parser = parse({
             var b = item_data[i] ;
 
             /*
-             * NOTE:  Importing only a subset of batting data to save on storage cost.
+             *playerID,yearID,stint,teamID,lgID,G,AB,R,H,2B,3B,HR,RBI,SB,CS,BB,SO,IBB,HBP,SH,SF,GIDP
              */
             var batting = {} ;
             batting["naturalID"] = uuid() ;  //  used for partition ID
             batting.playerID = b.playerID ;  //  range key
             batting.teamID = b.teamID ;  //  range key
             batting.yearID = parseInt(b.yearID) || 0 ;  // forcing imported data to be a number;  default to 0 if value is null or empty
-
-            batting.HR = parseInt(b.HR) || 0 ;
-            batting.RBI = parseInt(b.RBI) || 0 ;
-            batting.R = parseInt(b.R) || 0 ;
-            batting.SB = parseInt(b.SB) || 0 ;
-
-            /*
             batting.stint = parseInt(b.stint) || 0 ;
+            batting.leagueID = b.lgID || "NA" ;  //  NA is neither AL or NL ;
+
+            batting.G = parseInt(b.G) || 0 ;  //  number of games played
             batting.AB = parseInt(b.AB) || 0 ;
-            batting.G = parseInt(b.G) || 0 ;
+            batting.R = parseInt(b.R) || 0 ;
             batting.H = parseInt(b.H) || 0 ;
             batting["2B"] = parseInt(b["2B"]) || 0 ;
             batting["3B"] = parseInt(b["3B"]) || 0 ;
-            batting.CS = parseInt(b.CS) || 0 ;
-            batting.BB = parseInt(b.BB) || 0 ;
-            batting.SO = parseInt(b.SO) || 0 ;
-            batting.IBB = parseInt(b.IBB) || 0 ;
-            batting.HBP = parseInt(b.HBP) || 0 ;
-            batting.SH = parseInt(b.SH) || 0 ;
-            batting.SF = parseInt(b.SF) || 0 ;
-            batting.GIDP = parseInt(b.GIDP) || 0 ;
-            */
 
+            batting.HR = parseInt(b.HR) || 0 ;
+            batting.RBI = parseInt(b.RBI) || 0 ;
+            
+            batting.SB = parseInt(b.SB) || 0 ;
+            batting.CS = parseInt(b.CS) || 0 ;   //  Caught stealing
+            batting.BB = parseInt(b.BB) || 0 ;   //  Walk, base on balls
+            batting.SO = parseInt(b.SO) || 0 ;
+            batting.IBB = parseInt(b.IBB) || 0 ;  //  Intentional base on balls allowed
+            batting.HBP = parseInt(b.HBP) || 0 ;  //  Hit by pitch ;
+            batting.SH = parseInt(b.SH) || 0 ;    //  Sacrifice hit
+            batting.SF = parseInt(b.SF) || 0 ;    //  Sacrifice fly
+            batting.GIDP = parseInt(b.GIDP) || 0 ;  //  Ground into double play
+
+            /*
+             * Calculated statistic ;
+             */
+            
+            batting.BA = (batting.H/batting.AB) || 0 ;  //  Batting average or AVG
+            batting.OBP = [(batting.H + batting.BB + batting.HBP) / ( batting.AB + batting.BB + batting.HBP + batting.SF )]-0 || 0 ;
+            batting.SLG = [(batting.H + (2 * batting["2B"]) + (3 * batting["3B"]) + (4 * batting.HR) ) / batting.AB]-0 || 0 ; //  Slugging AVG
+            batting.OPS = [batting.OBP+batting.SLG]-0 || 0 ; //  on-base percentage plus slugging 
+            
+            //  Popular:  BA, HR, RBI, SLG, SB, OPS            
+            //console.log(batting.BA + ", " + batting.RBI + ", " + batting.OBP + ", " + batting.SLG + ", " + batting.OPS) ;
+            
             /*
              * dynamodb specific data structure
              */

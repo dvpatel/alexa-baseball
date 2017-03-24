@@ -23,6 +23,42 @@ var handlers =  {
 	    'LaunchRequest': function () {
 	        this.emit('SayHello');
 	    },
+	    	    
+	    /*
+	     * Get top homeruns hitter for a given year.
+	     */
+	    'HomerunsByPlayerYearIntent': function () {	    	
+	    	
+	        var inpYear = this.event.request.intent.slots.playerYear.value - 0 ;
+	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
+	        
+	        console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
+
+            var self = this ;            
+	    	apputil.homerunsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
+	    	    if (err) {
+	    		    console.log(JSON.stringify(err)) ;
+	    		    callback(new Error(err));	    	    	
+	    	    } else {	    	
+	    	    	var thr = 0 ;
+	    	    	var team  = ""
+	    	    	for (var i = 0; i < data.length; i++) {
+	    	    		var r = data[i] ;
+	    	    		thr = thr + r.HR ;
+	    	    		
+	    	    		team = r.name ;	    	    			
+	    	    		
+	    	    	}
+	    	    	
+	    	    	var result = inpFirstname + " " + inpLastname + " hit " + thr + " home runs in " + inpYear + " while playing for " + team ;
+	    	    	
+	    	    	console.log("Result:  " + result) ;
+	    	    	
+	    	        self.emit(':tell', result);
+	    	    }
+	    	}) ;	        
+	    },	    
 	    
 	    /*
 	     * Get top homeruns hitter for a given year.
@@ -46,7 +82,7 @@ var handlers =  {
 	    	    	    var hr = data[i].HR ;
 	    	    	    var fullName = data[i].fullName ;
 	    	    	    var yearID = data[i].yearID ;
-	    	    	    var teamName = data[i].franchiseName ;
+	    	    	    var teamName = data[i].name ;
 
 	                    result = fullName + " had the most home runs at " + hr + " in " + yearID ;
 	    	        }
@@ -56,6 +92,7 @@ var handlers =  {
 	    	}) ;
 	        
 	    },	    
+	    
 	    /*
 	     * Get top homeruns hitter for a given year.
 	     */
@@ -76,7 +113,7 @@ var handlers =  {
     	    	    var hr = data[i].HR ;
     	    	    var fullName = data[i].fullName ;
     	    	    var yearID = data[i].yearID ;
-    	    	    var teamName = data[i].franchiseName ;
+    	    	    var teamName = data[i].name ;
 
                     var result = "The home run king between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + hr + " home runs in " + yearID ;
                     
@@ -86,9 +123,6 @@ var handlers =  {
 	    	}) ;
 	        
 	    },
-
-	    
-	    
 	    
 	    'Unhandled': function() {
 	        console.log("UNHANDLED");

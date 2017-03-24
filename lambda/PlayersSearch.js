@@ -16,17 +16,18 @@ var apputil = apputilmod(awsConfig) ;
 /*
  * Input last name
  */
-var inpLastname = (process.argv[2] || "Ortiz") ;
+var inpFirstname = (process.argv[2] || "David") ;
+var inpLastname = (process.argv[3] || "Ortiz") ;
 
 (function() {	
 
-	apputil.playerLookupByName(inpLastname, function(err, data) {
+	apputil.playerLookupByName(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), function(err, data) {
 	    if (err) {
 	        console.error(err) ;
 	    } else {
 	    	for (var i = 0; i < data.length; i++ ) {
-	    		var player = data[i] ;
-	            console.log(player.firstName + " " + player.lastName + " - " + player.birthYear) ;
+	    	    var player = data[i] ;
+	            console.log(player) ;
 	    	}
 	    }
 	}) ;

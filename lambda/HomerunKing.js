@@ -30,7 +30,7 @@ var endYear = (process.argv[3] || 2016)-0 ;
 	    	    var hr = data[i].HR ;
 	    	    var fullName = data[i].fullName ;
 	    	    var yearID = data[i].yearID ;
-	    	    var teamName = data[i].franchiseName ;
+	    	    var teamName = data[i].name ;
 
 	    	    console.log(hr + " -  " + fullName+ ", " + yearID + ", " + teamName ) ;	    	    
 	        }
