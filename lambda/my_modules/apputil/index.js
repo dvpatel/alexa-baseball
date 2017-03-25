@@ -14,27 +14,18 @@ module.exports = function(awsConfig) {
 	 * Lookup player by first and last name ;
 	 */
 	module.playerLookupByName = function(inpFirstname, inpLastname, appCallback) {	
-		playerLookupByName(inpFirstname, inpLastname, appCallback);
-	}
-
-	/*
-	 * Lookup player by last name ;
-	 */
-	module.playerLookupByLastName = function(inpLastname, appCallback) {	
 
 		if (!inpLastname) {
 			var error = "ERROR:  Please provide first and last name." ;
 			appCallback(error, null) ;		
 			return ;
 		}
+				
+		playerLookupByName(inpFirstname, inpLastname, appCallback);
+	}
 		
-		dbutil.playerLookupByLastName(inpLastname, function(err, data) {
-			appCallback(err, data.Items) ;		    	
-		}) ;
-	}	
-	
 	/*
-	 * Find top homeruns hitter for a given year
+	 * Find top home runs hitter for a given year
 	 */
 	module.topHomerunsForYear = function(inpYear, inpHR, appCallback) {
 		var currentTime = new Date()

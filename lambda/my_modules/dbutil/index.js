@@ -9,7 +9,7 @@ var docClient = new AWS.DynamoDB.DocumentClient();
 var module = {} ;
 
 /*
- * First chained function to get home runs based on inputed values and results constraint
+ * Get home runs given year and hr conditions
  */
 module.homeruns = function(year, hr, limit, callback) {
 
@@ -74,13 +74,10 @@ module.topHomerunsByYear = function(yr, callback) {
     docClient.query(params, function(err, data) {
         callback(err, data) ;
     });
-
 }
 
-
-
 /*
- * Locate player name based on playerID
+ * Lookup player based on playerID
  */
 module.playerLookup = function(playerID, callback) {
 
@@ -105,45 +102,31 @@ module.playerLookup = function(playerID, callback) {
 
 
 /*
- * Locate players by first and lastname
+ * Lookup player by first and / or last name
  */
 module.playerLookupByName = function(firstName, lastName, callback) {
 
     var params = {
         TableName : "Players",
         IndexName : "LastnameIndex",
-        KeyConditionExpression: "lastName = :ln and firstName = :fn",
+        KeyConditionExpression : "",
         ExpressionAttributeValues: {
             ":ln": lastName,
             ":fn": firstName
         }
     }
-
-    docClient.query(params, function(err, data) {
-        callback(err, data) ;
-    }) ;
-}
-
-/*
- * Locate players by lastname
- */
-module.playerLookupByLastName = function(lastName, callback) {
-
-    var params = {
-        TableName : "Players",
-        IndexName : "LastnameIndex",
-        KeyConditionExpression: "lastName = :ln",
-        ExpressionAttributeValues: {
-            ":ln": lastName
-        }
+    
+    if (firstName && lastName) {
+        params.KeyConditionExpression = "lastName = :ln and firstName = :fn" ;    	
+    } else if (!firstName && lastName) {    	
+        params.KeyConditionExpression = "lastName = :ln" ;    	
     }
-
+    
+    
     docClient.query(params, function(err, data) {
         callback(err, data) ;
     }) ;
 }
-
-
 
 /*
  * Function to locate player based on playerID

@@ -27,7 +27,7 @@ var params = {
         { AttributeName: "yearID", AttributeType: "N" },
         { AttributeName: "HR", AttributeType: "N" },
     ],
-    ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
+    ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
     GlobalSecondaryIndexes: [
       {
         IndexName : "HomerunsIndex",
@@ -38,7 +38,7 @@ var params = {
         Projection: {
             ProjectionType: "ALL"
         },
-        ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
+        ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
       },
       {
           IndexName : "HomerunsByPlayerIndex",
@@ -49,7 +49,7 @@ var params = {
           Projection: {
               ProjectionType: "ALL"
           },
-          ProvisionedThroughput: {ReadCapacityUnits: 10, WriteCapacityUnits:10 },
+          ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
         },      
     ],
 };
