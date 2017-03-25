@@ -23,6 +23,81 @@ var handlers =  {
 	    'LaunchRequest': function () {
 	        this.emit('SayHello');
 	    },
+	    
+	    'PlayerBasicStatByYearIntent' : function() {
+	    	
+	        var inpYear = this.event.request.intent.slots.playerYear.value - 0 ;
+	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
+	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
+	        
+	        /*
+				Batting Average (BA)
+				Run Batted In (RBI)
+				RBI
+				Slugging Percentage (SLG)
+				Slugging Average (SLG)
+				Stolen Base (SB)
+				Stolen Bases (SB)
+				OBP (OBP)
+				On base percentage (OBP)
+				OPS (OPS)
+				On base plus slugging (OPS)
+				Runs (R)
+				Runs Scored (R)
+				Home Runs (HR)
+				Dingers (HR)
+				Homers (HR)
+	         */
+	        
+	        var kv = {
+	        		"batting average":"BA",
+	        		"run batted in":"RBI",
+	        		"runs batted in":"RBI",	        		
+	        		"rbi":"RBI",
+	        		"slugging percentage":"SLG",
+	        		"slugging average":"SLG",
+	        		"stolen base":"SB",
+	        		"stolen bases":"SB",
+	        		"obp":"OBP",
+	        		"on base percentage":"OBP",
+	        		"ops":"OPS",
+	        		"on base plus slugging":"OPS",
+	        		"runs":"R",
+	        		"runs scored":"R",
+	        		"home runs":"HR",
+	        		"dingers":"HR",
+	        		"homers":"HR"
+	        }
+	        
+	        var stat = kv[basicStatName] ;
+	        
+	        console.log("Requested stat:  " + stat) ;
+	        console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
+
+            var self = this ;            
+	    	apputil.homerunsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
+	    	    if (err) {
+	    		    console.log(JSON.stringify(err)) ;
+	    		    callback(new Error(err));	    	    	
+	    	    } else {	    		    	    	
+	    	    	for (var i = 0; i < data.length; i++) {
+	    	    		
+	    	    		var r = data[i] ;	    	    	
+	    	    		var team = r.name ;	    	    		
+	    	    		var results = [
+	    	    			"While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName,
+	    	    			inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName + " in " + inpYear + ".  He was playing for the " + team,
+	    	    			"In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName + " while playing for the " + team] ;
+
+	    	    		var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
+	    	    		
+	    	    		self.emit(':tell', results[rindx]);
+	    	    		
+	    	    	}	    	    		    	    	
+	    	    }
+	    	}) ;	        
+	    },
 	    	    
 	    /*
 	     * Get top homeruns hitter for a given year.
@@ -33,29 +108,23 @@ var handlers =  {
 	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
 	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 	        
-	        console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
-
             var self = this ;            
 	    	apputil.homerunsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
 	    	    if (err) {
 	    		    console.log(JSON.stringify(err)) ;
 	    		    callback(new Error(err));	    	    	
-	    	    } else {	    	
-	    	    	var thr = 0 ;
-	    	    	var team  = ""
+	    	    } else {
+	    	    	
 	    	    	for (var i = 0; i < data.length; i++) {
+	    	    	
 	    	    		var r = data[i] ;
-	    	    		thr = thr + r.HR ;
-	    	    		
-	    	    		team = r.name ;	    	    			
-	    	    		
+	    	    		var thr = r.HR ;	    	    		
+	    	    		var team = r.name ;	    	    			
+
+		    	    	var result = inpFirstname + " " + inpLastname + " hit " + thr + " home runs in " + inpYear + " while playing for " + team ;
+		    	        self.emit(':tell', result);
+		    	        
 	    	    	}
-	    	    	
-	    	    	var result = inpFirstname + " " + inpLastname + " hit " + thr + " home runs in " + inpYear + " while playing for " + team ;
-	    	    	
-	    	    	console.log("Result:  " + result) ;
-	    	    	
-	    	        self.emit(':tell', result);
 	    	    }
 	    	}) ;	        
 	    },	    

@@ -83,10 +83,10 @@ var parser = parse({
              * Calculated statistic ;
              */
             
-            batting.BA = (batting.H/batting.AB) || 0 ;  //  Batting average or AVG
-            batting.OBP = [(batting.H + batting.BB + batting.HBP) / ( batting.AB + batting.BB + batting.HBP + batting.SF )]-0 || 0 ;
-            batting.SLG = [(batting.H + (2 * batting["2B"]) + (3 * batting["3B"]) + (4 * batting.HR) ) / batting.AB]-0 || 0 ; //  Slugging AVG
-            batting.OPS = [batting.OBP+batting.SLG]-0 || 0 ; //  on-base percentage plus slugging 
+            batting.BA = (batting.H/batting.AB).toFixed(3) || 0 ;  //  Batting average or AVG
+            batting.OBP = ([(batting.H + batting.BB + batting.HBP) / ( batting.AB + batting.BB + batting.HBP + batting.SF )]-0).toFixed(3) || 0 ;
+            batting.SLG = ([(batting.H + (2 * batting["2B"]) + (3 * batting["3B"]) + (4 * batting.HR) ) / batting.AB]-0).toFixed(3) || 0 ; //  Slugging AVG
+            batting.OPS = (parseFloat(batting.OBP) + parseFloat(batting.SLG)).toFixed(3) ; //  on-base percentage plus slugging 
             
             //  Popular:  BA, HR, RBI, SLG, SB, OPS            
             //console.log(batting.BA + ", " + batting.RBI + ", " + batting.OBP + ", " + batting.SLG + ", " + batting.OPS) ;

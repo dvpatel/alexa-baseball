@@ -10,6 +10,6 @@ node TeamsCreateTable.js
 node PlayersCreateTable.js
 node BattingCreateTable.js
 
-node PLayersLoadData.js
+node PlayersLoadData.js
 node BattingLoadData.js
 node TeamsLoadData.js

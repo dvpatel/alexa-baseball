@@ -46,6 +46,8 @@ MostHomerunsByYearsIntent Who hit the most home runs from {startYear} to {endYea
 HomerunsByPlayerYearIntent How many home runs did {firstName} {lastName} hit in {playerYear}
 HomerunsByPlayerYearIntent How many home runs did {firstName} {lastName} hit on {playerYear}
 
+PlayerBasicStatByYearIntent What is {firstName} {lastName} {mlb_basic_stat} from {playerYear}
+PlayerBasicStatByYearIntent get me {firstName} {lastName} {mlb_basic_stat} from {playerYear}
 
 
 
