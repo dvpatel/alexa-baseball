@@ -21,7 +21,7 @@ var params = {
         { AttributeName: "teamID", AttributeType: "S" },
         { AttributeName: "yearID", AttributeType: "N" },
         ],
-    ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
+    ProvisionedThroughput: { ReadCapacityUnits: 10, WriteCapacityUnits: 10 },
 };
 
 /*
