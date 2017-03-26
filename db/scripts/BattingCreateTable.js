@@ -18,8 +18,8 @@ var dynamodb = new AWS.DynamoDB();
 var params = {
     TableName : "Batting",
     KeySchema: [       
-        { AttributeName: "naturalID", KeyType: "HASH"},
-        { AttributeName: "playerID", KeyType: "RANGE" }
+        { AttributeName: "playerID", KeyType: "HASH" },
+        { AttributeName: "naturalID", KeyType: "RANGE"}
     ],
     AttributeDefinitions: [       
         { AttributeName: "naturalID", AttributeType: "S" },
@@ -41,10 +41,10 @@ var params = {
         ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
       },
       {
-          IndexName : "HomerunsByPlayerIndex",
+          IndexName : "StatsByPlayerYearIndex",
           KeySchema : [
               { AttributeName: "playerID", KeyType: "HASH"},
-              { AttributeName: "yearID", KeyType: "RANGE" }
+              { AttributeName: "yearID", KeyType: "RANGE"}
           ],
           Projection: {
               ProjectionType: "ALL"

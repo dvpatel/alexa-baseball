@@ -9,19 +9,20 @@ var nconf = require('nconf') ;
 nconf.file({file: 'config.json'}) ;
 
 var awsConfig = nconf.get('aws-config') ;
-var apputilmod = require('../lambda/my_modules/apputil') ;
+var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-var inpFirstname = (process.argv[2] || "David") ;
-var inpLastname = (process.argv[3] || "Ortiz") ;
+var inpFirstname = (process.argv[2] || "Barry") ;
+var inpLastname = (process.argv[3] || "Bonds") ;
 var inpYear = (process.argv[4] || 2001)-0 ;
 
 (function() {	
 
-	apputil.homerunsByYearByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), inpYear, function(err, data) {
+	apputil.battingStatsByYearByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), inpYear, function(err, data) {
 	    if (err) {
 	        console.error(err) ;
 	    } else {	    	
+
 	    	var thr = 0 ;
 	    	for (var i = 0; i < data.length; i++) {
 	    		var r = data[i] ;

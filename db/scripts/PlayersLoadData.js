@@ -64,7 +64,7 @@ var parser = parse({
             player.birthState = p.birthState || "NO_DATA" ;
             player.birtyCity = p.birthCity || "NO_DATA" ;            
             
-            player.deathYear = parseInt(p.deathYear) || 0 ;
+            player.deathYear = parseInt(p.deathYear) || 9999 ;
             player.deathMonth = parseInt(p.deathMonth) || 0 ;
             player.deathDay = parseInt(p.deathDay) || 0 ;
             player.deathCountry = p.deathCountry || "NO_DATA" ;

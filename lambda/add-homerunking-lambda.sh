@@ -4,7 +4,7 @@ cp config.json.aws config.json
 
 npm install
 
-zip -r ./homerunking.zip config.json HomerunKingLambda.js my_modules/ node_modules/
+zip -r ./homerunking.zip config.json HomerunKingLambda.js node_modules/
 
 aws lambda create-function \
 --region us-east-1 \

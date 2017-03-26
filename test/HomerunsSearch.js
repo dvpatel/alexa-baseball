@@ -10,14 +10,14 @@ var nconf = require('nconf') ;
 nconf.file({file: 'config.json'}) ;
 
 var awsConfig = nconf.get('aws-config') ;
-var apputilmod = require('../lambda/my_modules/apputil') ;
+var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
 /*
- * Input with default of 2016 20 home runs
+ * Input with default of 2015 20 home runs
  */
-var inpYear = (process.argv[2] || 2016)-0 ;
-var inpHR = (process.argv[3] || 20)-0 ;
+var inpYear = (process.argv[2] || 1989)-0 ;
+var inpHR = (process.argv[3] || 5)-0 ;
 
 
 /*

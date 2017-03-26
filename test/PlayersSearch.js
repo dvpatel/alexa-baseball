@@ -9,7 +9,7 @@ var nconf = require('nconf') ;
 nconf.file({file: 'config.json'}) ;
 
 var awsConfig = nconf.get('aws-config') ;
-var apputilmod = require('../lambda/my_modules/apputil') ;
+var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
 

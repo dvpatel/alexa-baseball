@@ -9,14 +9,14 @@ var nconf = require('nconf') ;
 nconf.file({file: 'config.json'}) ;
 
 var awsConfig = nconf.get('aws-config') ;
-var apputilmod = require('../lambda/my_modules/apputil') ;
+var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
 /*
- * Set start and end year with defaults 2015  2016
+ * Set start and end year with defaults 1989  1995
  */
-var startYear = (process.argv[2] || 2015)-0 ;
-var endYear = (process.argv[3] || 2016)-0 ;
+var startYear = (process.argv[2] || 1989)-0 ;
+var endYear = (process.argv[3] || 1995)-0 ;
 
 (function() {	
 	
@@ -26,7 +26,6 @@ var endYear = (process.argv[3] || 2016)-0 ;
 			console.log(err) ;
 		} else {
 	        for (var i = 0; i < data.length; i++) {
-
 	    	    var hr = data[i].HR ;
 	    	    var fullName = data[i].fullName ;
 	    	    var yearID = data[i].yearID ;

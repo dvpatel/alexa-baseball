@@ -6,8 +6,62 @@ var nconf = require('nconf') ;
 nconf.file({file: 'config.json'}) ;
 
 var awsConfig = nconf.get('aws-config') ;
-var apputilmod = require('./my_modules/apputil') ;
+var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
+
+
+/*
+Batting Average (BA)
+Run Batted In (RBI)
+RBI
+Slugging Percentage (SLG)
+Slugging Average (SLG)
+Stolen Base (SB)
+Stolen Bases (SB)
+OBP (OBP)
+On base percentage (OBP)
+OPS (OPS)
+On base plus slugging (OPS)
+Runs (R)
+Runs Scored (R)
+Home Runs (HR)
+Dingers (HR)
+Homers (HR)
+*/
+var kv = {
+		"batting average":"BA",
+		"run batted in":"RBI",
+		"runs batted in":"RBI",	        		
+		"rbi":"RBI",
+		"slugging percentage":"SLG",
+		"slugging average":"SLG",
+		"stolen base":"SB",
+		"stolen bases":"SB",
+		"obp":"OBP",
+		"on base percentage":"OBP",
+		"ops":"OPS",
+		"on base plus slugging":"OPS",
+		"runs":"R",
+		"runs scored":"R",
+		"home runs":"HR",
+		"dingers":"HR",
+		"homers":"HR"
+}
+
+/*
+*  Stats Key Names
+*/
+var sdef = {
+"BA":"Batting Average",
+"RBI":"Runs Batted In",
+"SLG":"Slugging Percentage",
+"SB":"Stolen Bases",
+"OBP":"On Base Percentage",
+"OPS":"On Base Plus Slugging",
+"R":"Runs Scored",
+"HR":"Home Runs"
+}
+
 
 /*
  *  Lambda handler for homerunking
@@ -23,6 +77,90 @@ var handlers =  {
 	    'LaunchRequest': function () {
 	        this.emit('SayHello');
 	    },
+
+	    'PlayerCareerStatsIntent' : function() {
+	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
+
+            var self = this ;            
+	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
+	    	    if (err) {
+	    	        console.error(err) ;
+	    	    } else {	    	
+
+	    	    	var thr = 0 ;  // total home runs ;
+	    	    	var trbi = 0 ; //  total rbi
+	    	    	var tsb = 0 ;  //  total stolen bases
+	    	    	var tr = 0 ;  //  total runs
+	    	    	for (var i = 0; i < data.length; i++) {
+	    	    		var d = data[i] ;	    	    		
+	    	    		thr = thr + d.HR ;
+	    	    		trbi = trbi + d.RBI ;
+	    	    		tsb = tsb + d.SB ;
+	    	    		tr = tr + d.R ;
+	    	    	}
+	    	    
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total runs batted in " + trbi + ", total runs scored " + tr + " and total stolen bases " + tsb ;	    	    	
+    	    		self.emit(':tell', result);
+
+	    	    }
+	    	    
+	    	})	        
+	    	
+	    },
+	    
+	    'PlayerSpecificCareerStatsIntent' : function() {
+	    	
+	    	//PlayerSpecificCareerStatsIntent get me {firstName} {lastName} career {basicStatName} stat
+
+	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
+	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
+
+	        var stat = kv[basicStatName] ;
+	        var statDef = sdef[stat] ;
+	        
+            var self = this ;            
+	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
+	    	    if (err) {
+	    	        console.error(err) ;
+	    	    } else {	    	
+
+	    	    	//  BA, RBI, SB, R, HR ==>  add them together
+	    	    	//  SLG, OBP, OPS ==>  take average ;
+	    	    	
+	    	    	var x = ["RBI", "SB", "R", "HR"] ;
+	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
+	    	    	
+	    	    	//  console.log("StatName:  " + basicStatName + ", Map:  " + stat + ", statDef:  " + statDef) ;	    	    	
+    	    		var t = 0 ;
+	    	    	if (x.indexOf(stat) != -1) {
+	    	    		
+	    	    		for (var i = 0; i < data.length; i++ ) {
+	    	    			var d = data[i] ;
+	    	    			t = t + d[stat] ;	    	    			
+	    	    		}
+	    	    			    	    		
+	    	    	} else if (y.indexOf(stat) != -1) {
+	    	    		
+	    	    		var t = 0 ;
+	    	    		for (var i = 0; i < data.length; i++ ) {
+	    	    			var d = data[i] ;
+	    	    			t = t + parseFloat(d[stat]) ;	    	    			
+	    	    		}
+	    	    		
+	    	    		t = (t / data.length).toFixed(3) ;
+	    	    	}
+
+	    	    	console.log(result) ;
+    	    		var result = inpFirstname + " " + inpLastname + " career " + statDef + " is " + t ;
+    	    		self.emit(':tell', result);
+	    	    }
+	    	    
+	    	})	        
+	        
+
+	    },
 	    
 	    'PlayerBasicStatByYearIntent' : function() {
 	    	
@@ -30,53 +168,15 @@ var handlers =  {
 	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
 	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
-	        
-	        /*
-				Batting Average (BA)
-				Run Batted In (RBI)
-				RBI
-				Slugging Percentage (SLG)
-				Slugging Average (SLG)
-				Stolen Base (SB)
-				Stolen Bases (SB)
-				OBP (OBP)
-				On base percentage (OBP)
-				OPS (OPS)
-				On base plus slugging (OPS)
-				Runs (R)
-				Runs Scored (R)
-				Home Runs (HR)
-				Dingers (HR)
-				Homers (HR)
-	         */
-	        
-	        var kv = {
-	        		"batting average":"BA",
-	        		"run batted in":"RBI",
-	        		"runs batted in":"RBI",	        		
-	        		"rbi":"RBI",
-	        		"slugging percentage":"SLG",
-	        		"slugging average":"SLG",
-	        		"stolen base":"SB",
-	        		"stolen bases":"SB",
-	        		"obp":"OBP",
-	        		"on base percentage":"OBP",
-	        		"ops":"OPS",
-	        		"on base plus slugging":"OPS",
-	        		"runs":"R",
-	        		"runs scored":"R",
-	        		"home runs":"HR",
-	        		"dingers":"HR",
-	        		"homers":"HR"
-	        }
-	        
+	        	        
 	        var stat = kv[basicStatName] ;
+	        var statDef = sdef[stat] ;
 	        
-	        console.log("Requested stat:  " + stat) ;
-	        console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
+	        //console.log("Requested stat:  " + stat + ", Def:  " + statDef) ;
+	        //console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
 
             var self = this ;            
-	    	apputil.homerunsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
+	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
 	    	    if (err) {
 	    		    console.log(JSON.stringify(err)) ;
 	    		    callback(new Error(err));	    	    	
@@ -86,12 +186,13 @@ var handlers =  {
 	    	    		var r = data[i] ;	    	    	
 	    	    		var team = r.name ;	    	    		
 	    	    		var results = [
-	    	    			"While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName,
-	    	    			inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName + " in " + inpYear + ".  He was playing for the " + team,
-	    	    			"In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + basicStatName + " while playing for the " + team] ;
+	    	    			"While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef,
+	    	    			inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef + " in " + inpYear + ".  He was playing for the " + team,
+	    	    			"In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef + " while playing for the " + team] ;
 
 	    	    		var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
-	    	    		
+
+	    	    		console.log(results[rindx]) ;
 	    	    		self.emit(':tell', results[rindx]);
 	    	    		
 	    	    	}	    	    		    	    	
@@ -109,7 +210,7 @@ var handlers =  {
 	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 	        
             var self = this ;            
-	    	apputil.homerunsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
+	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
 	    	    if (err) {
 	    		    console.log(JSON.stringify(err)) ;
 	    		    callback(new Error(err));	    	    	

@@ -6,7 +6,9 @@
     "alexa-sdk": "*",
     "async": "*",
     "aws-sdk":"*",
-    "nconf":"*"
+    "nconf":"*",
+    "apputil":"file:../my_modules/apputil",
+    "dbutil":"file:../my_modules/dbutil"
   },
   "engines": {
     "node": "*"
