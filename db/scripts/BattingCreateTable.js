@@ -51,6 +51,16 @@ var params = {
           },
           ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
         },      
+      {
+          IndexName : "StatsByYearIndex",
+          KeySchema : [
+              { AttributeName: "yearID", KeyType: "HASH"}
+          ],
+          Projection: {
+              ProjectionType: "ALL"
+          },
+          ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
+        },      
     ],
 };
 
@@ -62,6 +72,7 @@ dynamodb.createTable(params, function(err, data) {
     if (err) {
 	console.log(err) ;
     } else {
+	console.log(data) ;
         console.log("Created table:  Batting.");
     }
 });

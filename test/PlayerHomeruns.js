@@ -12,9 +12,9 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-var inpFirstname = (process.argv[2] || "Barry") ;
-var inpLastname = (process.argv[3] || "Bonds") ;
-var inpYear = (process.argv[4] || 2001)-0 ;
+var inpFirstname = (process.argv[2] || "Roger") ;
+var inpLastname = (process.argv[3] || "Maris") ;
+var inpYear = (process.argv[4] || 1961)-0 ;
 
 (function() {	
 

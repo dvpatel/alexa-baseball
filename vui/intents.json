@@ -1,0 +1,90 @@
+{
+  "intents": [
+    {
+      "intent": "PlayerSpecificCareerStatsIntent",
+      "slots": [
+        {
+          "name": "firstName",
+          "type": "MLB_FIRST_NAME"
+        },
+        {
+          "name": "lastName",
+          "type": "MLB_LAST_NAME"
+        },
+        {
+          "name": "basicStatName",
+          "type": "MLB_BASIC_STAT"
+        }
+      ]
+    },
+    {
+      "intent": "PlayerCareerStatsIntent",
+      "slots": [
+        {
+          "name": "firstName",
+          "type": "MLB_FIRST_NAME"
+        },
+        {
+          "name": "lastName",
+          "type": "MLB_LAST_NAME"
+        }
+      ]
+    },
+    {
+      "intent": "StatsKingForYearIntent",
+      "slots": [
+        {
+        	"name": "basicStatName",
+            "type": "MLB_BASIC_STAT"
+        },    	  
+        {
+          "name": "givenYear",
+          "type": "AMAZON.FOUR_DIGIT_NUMBER"
+        }
+      ]
+    },
+    {
+        "intent": "PlayerBasicStatByYearIntent",
+        "slots": [
+          {
+            "name": "playerYear",
+            "type": "AMAZON.FOUR_DIGIT_NUMBER"
+          },
+          {
+            "name": "firstName",
+            "type": "MLB_FIRST_NAME"
+          },
+          {
+            "name": "lastName",
+            "type": "MLB_LAST_NAME"
+          },
+          {
+            "name": "basicStatName",
+            "type": "MLB_BASIC_STAT"
+          }
+        ]
+      },    
+    {
+    	"intent": "StatsKingForYearRangeIntent",
+    	"slots": [
+    	{
+    		"name": "startYear",
+    		"type": "AMAZON.FOUR_DIGIT_NUMBER"
+    	},
+    	{
+    		"name": "endYear",
+    		"type": "AMAZON.FOUR_DIGIT_NUMBER"
+    	}
+      ]
+    },    
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

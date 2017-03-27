@@ -1,5 +1,5 @@
 /*
- *  node PlayerStats Barry Bonds
+ *  node PlayerStats Babe Ruth
  *  Get lifetime stats for a player 
  */
 
@@ -12,8 +12,8 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-var inpFirstname = (process.argv[2] || "Barry") ;
-var inpLastname = (process.argv[3] || "Bonds") ;
+var inpFirstname = (process.argv[2] || "Babe") ;
+var inpLastname = (process.argv[3] || "Ruth") ;
 
 (function() {	
 
@@ -39,10 +39,9 @@ var inpLastname = (process.argv[3] || "Bonds") ;
 	    		tsb = tsb + d.SB ;
 	    		tr = tr + d.R ;
 
-                	//  console.log(d.name + ", " + d.yearID + ", " + d.HR) ;
 	    	}
 	    
-	    	console.log("Total Home runs:  " + thr + ", RBI:  "+ trbi + ", SB:  " + tsb + ", Runs Scored:  " + tr) ;
+	    	console.log(inpFirstname + " " + inpLastname + " career stats:  HR " + thr + ", RBI:  "+ trbi + ", SB:  " + tsb + ", Runs Scored:  " + tr) ;
 	    	
 	    }
 	    

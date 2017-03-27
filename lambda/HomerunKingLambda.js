@@ -78,41 +78,11 @@ var handlers =  {
 	        this.emit('SayHello');
 	    },
 
-	    'PlayerCareerStatsIntent' : function() {
-	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
-
-            var self = this ;            
-	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
-	    	    if (err) {
-	    	        console.error(err) ;
-	    	    } else {	    	
-
-	    	    	var thr = 0 ;  // total home runs ;
-	    	    	var trbi = 0 ; //  total rbi
-	    	    	var tsb = 0 ;  //  total stolen bases
-	    	    	var tr = 0 ;  //  total runs
-	    	    	for (var i = 0; i < data.length; i++) {
-	    	    		var d = data[i] ;	    	    		
-	    	    		thr = thr + d.HR ;
-	    	    		trbi = trbi + d.RBI ;
-	    	    		tsb = tsb + d.SB ;
-	    	    		tr = tr + d.R ;
-	    	    	}
-	    	    
-	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total runs batted in " + trbi + ", total runs scored " + tr + " and total stolen bases " + tsb ;	    	    	
-    	    		self.emit(':tell', result);
-
-	    	    }
-	    	    
-	    	})	        
-	    	
-	    },
-	    
+	    /*  
+	     *  Specific stat for given player:  BA, RBI, SLG, SB, OBP, OPS, R, HR 
+	     */
 	    'PlayerSpecificCareerStatsIntent' : function() {
 	    	
-	    	//PlayerSpecificCareerStatsIntent get me {firstName} {lastName} career {basicStatName} stat
-
 	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
 	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
@@ -158,10 +128,116 @@ var handlers =  {
 	    	    }
 	    	    
 	    	})	        
-	        
+	    },	    
+	    
+	    /*
+	     *  Player career stats for HR, RBI, SB, and R
+	     */
+	    'PlayerCareerStatsIntent' : function() {
+	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 
+            var self = this ;            
+	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
+	    	    if (err) {
+	    	        console.error(err) ;
+	    	    } else {	    	
+
+	    	    	var thr = 0 ;  // total home runs ;
+	    	    	var trbi = 0 ; //  total rbi
+	    	    	var tsb = 0 ;  //  total stolen bases
+	    	    	var tr = 0 ;  //  total runs
+	    	    	for (var i = 0; i < data.length; i++) {
+	    	    		var d = data[i] ;	    	    		
+	    	    		thr = thr + d.HR ;
+	    	    		trbi = trbi + d.RBI ;
+	    	    		tsb = tsb + d.SB ;
+	    	    		tr = tr + d.R ;
+	    	    	}
+	    	    
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total runs batted in " + trbi + ", total runs scored " + tr + " and total stolen bases " + tsb ;	    	    	
+    	    		self.emit(':tell', result);
+
+	    	    }
+	    	    
+	    	})	        
+	    	
+	    },
+
+	    /*
+	     * Get stats leader for given year:  BA, RBI, SLG, SB, OBP, OPS, R, HR
+	     */
+	    'StatsKingForYearIntent': function () {	    	
+	    	
+	        var endYear = this.event.request.intent.slots.givenYear.value - 0 ;
+	        var startYear = endYear - 1 ;
+
+	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
+	        var stat = kv[basicStatName] ;
+	        var statDef = sdef[stat] ;
+	        
+            var self = this ;            
+	    	apputil.maxStatByYears(startYear, endYear, stat, function(err, data) {		
+	    		
+	    		if (err) {
+	    		    console.log(JSON.stringify(err)) ;
+	    		    callback(new Error(err));
+	    		} else {
+	    			
+	    			var xval = data[0][stat] ;
+	    	    	var fullName = data[0].fullName ;
+	    	    	var yearID = data[0].yearID ;
+	    	    	var teamName = data[0].name ;
+
+	                var result = fullName + " had the most " + statDef + " at " + xval + " in " + yearID ;
+		    	    self.emit(':tell', result);		    	    
+	    		}				    		
+	    	}) ;	        
 	    },
 	    
+	    /*
+	     * Get stats leader for a given year range.
+	     */
+	    'StatsKingForYearRangeIntent': function () {	    	
+
+	    	var startYear = this.event.request.intent.slots.startYear.value - 0 ;
+	        var endYear = this.event.request.intent.slots.endYear.value - 0 ;
+	    	
+	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
+	        var stat = kv[basicStatName] ;
+	        var statDef = sdef[stat] ;
+	        	    	
+	        /*
+	         * Saving on DynamoDB cost and time
+	         */
+	        if ((endYear-startYear) > 10) {
+	        	var result = "Sorry.  Please pick a time range that is less than 10 years." ;
+	    	    self.emit(':tell', result);	        	
+	        }
+	        
+            var self = this ;            
+	    	apputil.maxStatByYears(startYear, endYear, stat, function(err, data) {		
+	    		
+	    		if (err) {
+	    		    console.log(JSON.stringify(err)) ;
+	    		    callback(new Error(err));
+	    		} else {
+	    			
+	    			var xval = data[0][stat] ;
+	    	    	var fullName = data[0].fullName ;
+	    	    	var yearID = data[0].yearID ;
+	    	    	var teamName = data[0].name ;
+
+                    var result = "The "+ statDef +" king between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + statDef + " in " + yearID ;
+		    	    self.emit(':tell', result);		    	    
+	    		}			
+	    		
+	    	}) ;	    			        
+	    },
+	    
+	    /*
+	     *  Get stat by year for a player
+	     */
 	    'PlayerBasicStatByYearIntent' : function() {
 	    	
 	        var inpYear = this.event.request.intent.slots.playerYear.value - 0 ;
@@ -172,9 +248,6 @@ var handlers =  {
 	        var stat = kv[basicStatName] ;
 	        var statDef = sdef[stat] ;
 	        
-	        //console.log("Requested stat:  " + stat + ", Def:  " + statDef) ;
-	        //console.log("Year:  " + inpYear + ", FN:  " + inpFirstname + ", LN:  " + inpLastname) ;
-
             var self = this ;            
 	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
 	    	    if (err) {
@@ -199,99 +272,10 @@ var handlers =  {
 	    	    }
 	    	}) ;	        
 	    },
-	    	    
-	    /*
-	     * Get top homeruns hitter for a given year.
-	     */
-	    'HomerunsByPlayerYearIntent': function () {	    	
-	    	
-	        var inpYear = this.event.request.intent.slots.playerYear.value - 0 ;
-	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
-	        
-            var self = this ;            
-	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
-	    	    if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));	    	    	
-	    	    } else {
-	    	    	
-	    	    	for (var i = 0; i < data.length; i++) {
-	    	    	
-	    	    		var r = data[i] ;
-	    	    		var thr = r.HR ;	    	    		
-	    	    		var team = r.name ;	    	    			
-
-		    	    	var result = inpFirstname + " " + inpLastname + " hit " + thr + " home runs in " + inpYear + " while playing for " + team ;
-		    	        self.emit(':tell', result);
-		    	        
-	    	    	}
-	    	    }
-	    	}) ;	        
-	    },	    
 	    
-	    /*
-	     * Get top homeruns hitter for a given year.
-	     */
-	    'HomerunKingForYearIntent': function () {	    	
-	    	
-	        var endYear = this.event.request.intent.slots.givenYear.value - 0 ;
-	        var startYear = endYear - 1 ;
-
-            var self = this ;            
-	    	apputil.maxHomerunByYears(startYear, endYear, function(err, data) {		
-	    		
-	    		if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));
-	    		} else {
-
-	    			var result ;
-	    	        for (var i = 0; i < data.length; i++) {
-
-	    	    	    var hr = data[i].HR ;
-	    	    	    var fullName = data[i].fullName ;
-	    	    	    var yearID = data[i].yearID ;
-	    	    	    var teamName = data[i].name ;
-
-	                    result = fullName + " had the most home runs at " + hr + " in " + yearID ;
-	    	        }
-	    	        self.emit(':tell', result);
-	    		}			
-	    		
-	    	}) ;
-	        
-	    },	    
-	    
-	    /*
-	     * Get top homeruns hitter for a given year.
-	     */
-	    'MostHomerunsByYearsIntent': function () {	    	
-	    	
-	        var startYear = this.event.request.intent.slots.startYear.value - 0 ;
-	        var endYear = this.event.request.intent.slots.endYear.value - 0 ;
-
-            var self = this ;            
-	    	apputil.maxHomerunByYears(startYear, endYear, function(err, data) {		
-	    		
-	    		if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));
-	    		} else {
-
-	    			var i = 0 ;
-    	    	    var hr = data[i].HR ;
-    	    	    var fullName = data[i].fullName ;
-    	    	    var yearID = data[i].yearID ;
-    	    	    var teamName = data[i].name ;
-
-                    var result = "The home run king between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + hr + " home runs in " + yearID ;
-                    
-	    	        self.emit(':tell', result);
-	    		}			
-	    		
-	    	}) ;
-	        
+	    'AMAZON.HelpIntent': function() {
+	        this.emit(':tell', ' Ask sports nation to get you stats for batters, fielders, and pitchers.' +  
+	        		'Try asking sports nation for Babe Ruth career stats.');
 	    },
 	    
 	    'Unhandled': function() {

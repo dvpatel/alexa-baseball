@@ -77,22 +77,25 @@ module.homeruns = function(year, hr, limit, callback) {
 /*
  * First chained function to get home runs based on inputed values and results constraint
  */
-module.topHomerunsByYear = function(yr, callback) {
+module.topStatsByYear = function(yr, fkey, fval, callback) {
 
-    //  DB params
+	//  DB params
     var params = {
         TableName : "Batting",
-        IndexName : "HomerunsIndex",
-        KeyConditionExpression: "yearID = :yr",
+        IndexName : "StatsByYearIndex",
+        KeyConditionExpression: "yearID = :yr" ,
+        FilterExpression: fkey + " >= :fv",
         ExpressionAttributeValues: {
             ":yr": yr,
+            ":fv":fval
         },
         ScanIndexForward: false,
-        Limit: 1,
+        ProjectionExpression: fkey + ", playerID, yearID, teamID" 
     } ;
 
-    docClient.query(params, function(err, data) {
-        callback(err, data) ;
+    docClient.query(params, function(err, data) {    	
+    	data.Items.sort(function(a,b) { return b[fkey] - a[fkey] ; } ) ;
+        callback(err, data) ;        
     });
 }
 

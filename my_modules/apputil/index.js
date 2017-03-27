@@ -23,60 +23,11 @@ module.exports = function(awsConfig) {
 				
 		playerLookupByName(inpFirstname, inpLastname, appCallback);
 	}
-		
-	/*
-	 * Find top home runs hitter for a given year
-	 */
-	module.topHomerunsForYear = function(inpYear, inpHR, appCallback) {
-		var currentTime = new Date()
-		var currentYear = currentTime.getFullYear()
-		if (inpYear > currentYear) {
-			var error = "ERROR:  Current year is " + currentYear + ", not " + endYear + ".  Not there yet." ;
-			appCallback(error, null) ;		
-			return ;
-		}
-
-		if (inpYear < 1871) {
-			var error = "ERROR:  Basbeall did not exisit before " + startYear + ".  Please enter value greater than 1871." ;
-			appCallback(error, null) ;		
-			return ;			
-		}
-
-		if (inpHR < 0 || inpHR > 100) {
-			var error = "ERROR:  Please enter valid homeruns (more than 0, less than 100.)" ;
-			appCallback(error, null) ;		
-			return ;			
-		}
-		
-		/*
-		 * First chained function to get home runs based on inputed values and results constraint
-		 */
-		function homeruns(callback) {
-		    
-		    dbutil.homeruns(inpYear, inpHR, 15, function(err, data) {
-		        if (err) {
-		            console.error(err) ;
-		        } else {
-		        	callback(null, data.Items) ;
-		        }
-		    }) ;
-
-		}
-		
-	    async.waterfall([ 
-	        homeruns,
-	        playerLookup,
-	        teamNameLookup
-	    ], function(error, data) {	    		    	
-	    	appCallback(error, data) ;	    	
-	    }) ;
-	}
-	
 	
 	/*
-	 * Return top homeruns hitter for a given start and end year range
+	 * Return top stat for a given date start and end year range
 	 */
-	module.maxHomerunByYears = function(startYear, endYear, appCallback) {
+	module.maxStatByYears = function(startYear, endYear, fkey, appCallback) {
 		
 		if (startYear > endYear) {
 			var error = "ERROR:  start year cannot be greater than end year." ;
@@ -99,7 +50,7 @@ module.exports = function(awsConfig) {
 			return ;			
 		}
 		
-		function homeruns(callback) {
+		function statsData(callback) {
 		    var yrRange = [] ;
 		    var n = endYear - startYear ; 
 
@@ -107,35 +58,40 @@ module.exports = function(awsConfig) {
 		    	yrRange.push(endYear - i) ;	
 		    }
 
+		    var fval = 0 ;
 		    var results = [] ;
-		    async.each(yrRange,
-		        function(yr, cb) {
-
-		            dbutil.topHomerunsByYear(yr, function(err, data) {
+		    async.eachSeries(yrRange,
+		        function(yr, cb) {		
+		    		var xval = fval ;		    		
+		            dbutil.topStatsByYear(yr, fkey, xval, function(err, data) {
 		                if (err) {
 		                    console.error(err) ;
-		                } else {
-				    if (data.Items.length > 0) {
-			                results.push(data.Items[0]) ;
-		                    }
+		                } else {		                	
+		                	if (data.Items.length > 0) {		                		
+		                		//  results are sorted ;
+		                		results.push(data.Items[0]) ;
+		                		fval = data.Items[0][fkey] ;		                		
+		                	}		                	
 		                }
+		                
 		                cb() ;
 		            }) ;
 
-		        }, function(err) {
-			    callback(null, results) ;
-			}
+		        }, 
+		        function(err) {
+		        	callback(null, results) ;
+		        }
 		    ) ;
 		}
 		
 	    async.waterfall([ 
-	        homeruns,
+	        statsData,
 	        playerLookup,
 	        teamNameLookup
 	    ], function(error, nr) {
 	    	
 	    	//  Sort the results and return ;
-	    	nr.sort(function(a,b) { return b.HR - a.HR ; } ) ;	    		    	
+	    	nr.sort(function(a,b) { return b[fkey] - a[fkey] ; } ) ;	    		    	
 	    	appCallback(error, nr) ;
 	    	
 	    }) ;		

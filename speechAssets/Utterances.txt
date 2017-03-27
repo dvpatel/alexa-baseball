@@ -1,34 +1,18 @@
-PlayerBasicStatByYearIntent What is {firstName} {lastName} {basicStatName} from {playerYear}
-PlayerBasicStatByYearIntent get me {firstName} {lastName} {basicStatName} from {playerYear}
-PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
+PlayerSpecificCareerStatsIntent How many {basicStatName} does {firstName} {lastName} have
+PlayerSpecificCareerStatsIntent How many {basicStatName} did {firstName} {lastName} have
+PlayerSpecificCareerStatsIntent What is {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent get me career {basicStatName} for {firstName} {lastName}
 
 PlayerCareerStatsIntent What are the career stats for {firstName} {lastName}
-PlayerCareerStatsIntent What is {firstName} {lastName} career stats
 PlayerCareerStatsIntent get me career stats for {firstName} {lastName}
 
-PlayerSpecificCareerStatsIntent get me career {basicStatName} for {firstName} {lastName}
-PlayerSpecificCareerStatsIntent What is {firstName} {lastName} career {basicStatName}
+StatsKingForYearIntent Who had the most {basicStatName} in {givenYear}
+StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
 
-HomerunsByPlayerYearIntent How many home runs {firstName} {lastName} hit in {playerYear}
+PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
 
-HomerunKingForYearIntent give me the home run king for {givenYear}
-HomerunKingForYearIntent tell me the home run king for {givenYear}
-HomerunKingForYearIntent get me the home run king for {givenYear}
-HomerunKingForYearIntent find the home run king for {givenYear}
-HomerunKingForYearIntent find me the home run king for {givenYear}
-HomerunKingForYearIntent give me the home run leader for {givenYear}
-HomerunKingForYearIntent tell me the home run leader for {givenYear}
-HomerunKingForYearIntent get me the home run leader for {givenYear}
-HomerunKingForYearIntent find the home run leader for {givenYear}
-HomerunKingForYearIntent find me the home run leader for {givenYear}
-HomerunKingForYearIntent In {givenYear} who had the most home runs
-HomerunKingForYearIntent In {givenYear} who was the home run leader
-HomerunKingForYearIntent Who hit the most home runs in {givenYear}
-HomerunKingForYearIntent Who was home runs king in {givenYear}
-HomerunKingForYearIntent Who was home runs leader in {givenYear}
-
-
-MostHomerunsByYearsIntent get me the home run king from {startYear} to {endYear}
+StatsKingForYearRangeIntent who hit the most home runs between {startYear} and {endYear}
+StatsKingForYearRangeIntent between {startYear} and {endYear} who hit the most home runs
 
 
 
@@ -44,48 +28,26 @@ MostHomerunsByYearsIntent get me the home run king from {startYear} to {endYear}
 
 
 
-MostHomerunsByYearsIntent give me the home run king from {startYear} to {endYear}
-MostHomerunsByYearsIntent tell me the home run king from {startYear} to {endYear}
-MostHomerunsByYearsIntent get me the home run king from {startYear} to {endYear}
-MostHomerunsByYearsIntent find the home run king from {startYear} to {endYear}
-MostHomerunsByYearsIntent find me the home run king from {startYear} to {endYear}
-
-MostHomerunsByYearsIntent give me the home run leader from {startYear} to {endYear}
-MostHomerunsByYearsIntent tell me the home run leader from {startYear} to {endYear}
-MostHomerunsByYearsIntent get me the home run leader from {startYear} to {endYear}
-MostHomerunsByYearsIntent find the home run leader from {startYear} to {endYear}
-MostHomerunsByYearsIntent find me the home run leader from {startYear} to {endYear}
-
-MostHomerunsByYearsIntent give me the home run king between {startYear} and {endYear}
-MostHomerunsByYearsIntent tell me the home run king between {startYear} and {endYear}
-MostHomerunsByYearsIntent get me the home run king between {startYear} and {endYear}
-MostHomerunsByYearsIntent find the home run king between {startYear} and {endYear}
-MostHomerunsByYearsIntent find me the home run king between {startYear} and {endYear}
-
-MostHomerunsByYearsIntent give me the home run leader between {startYear} and {endYear}
-MostHomerunsByYearsIntent tell me the home run leader between {startYear} and {endYear}
-MostHomerunsByYearsIntent get me the home run leader between {startYear} and {endYear}
-MostHomerunsByYearsIntent find the home run leader between {startYear} and {endYear}
-MostHomerunsByYearsIntent find me the home run leader between {startYear} and {endYear}
-
-MostHomerunsByYearsIntent Who had the most home runs from {startYear} to {endYear}
-MostHomerunsByYearsIntent Who hit the most home runs between {startYear} and {endYear}
-MostHomerunsByYearsIntent Who hit the most home runs from {startYear} to {endYear}
-MostHomerunsByYearsIntent The most home runs between {startYear} and {endYear}
-MostHomerunsByYearsIntent The most home runs from {startYear} to {endYear}
-MostHomerunsByYearsIntent Who hit the most home runs between {startYear} and {endYear}
-MostHomerunsByYearsIntent Who hit the most home runs from {startYear} to {endYear}
 
 
 
 
 
+StatsKingForYearIntent give me the {basicStatName} king for {givenYear}
+StatsKingForYearIntent tell me the {basicStatName} king for {givenYear}
+StatsKingForYearIntent get me the {basicStatName} king for {givenYear}
+StatsKingForYearIntent find the {basicStatName} king for {givenYear}
+StatsKingForYearIntent find me the {basicStatName} king for {givenYear}
+StatsKingForYearIntent give me the {basicStatName} leader for {givenYear}
+StatsKingForYearIntent tell me the {basicStatName} leader for {givenYear}
+StatsKingForYearIntent get me the {basicStatName} leader for {givenYear}
+StatsKingForYearIntent find the {basicStatName} leader for {givenYear}
+StatsKingForYearIntent find me the {basicStatName} leader for {givenYear}
+StatsKingForYearIntent Who had the most {basicStatName} in {givenYear}
+StatsKingForYearIntent Who was {basicStatName} king in {givenYear}
+StatsKingForYearIntent Who was {basicStatName} leader in {givenYear}
+StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
+StatsKingForYearIntent In {givenYear} who was the {basicStatName} leader
+StatsKingForYearIntent In {givenYear} who was the {basicStatName} king
 
-
-
-
-
-HomerunsByPlayerYearIntent How many home runs does {firstName} {lastName} have
-HomerunsByPlayerYearIntent How many home runs has {firstName} {lastName} hit
 HomerunKingForYearIntent Who has the most home runs
-HomerunsByPlayerYearIntent How many home runs did {firstName} {lastName} hit

@@ -1,0 +1,17 @@
+batting average
+run batted in
+runs batted in
+rbi
+slugging percentage
+slugging average
+stolen base
+stolen bases
+obp
+on base percentage
+ops
+on base plus slugging
+runs
+runs scored
+home runs
+dingers
+homers
