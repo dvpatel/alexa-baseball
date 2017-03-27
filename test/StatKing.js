@@ -18,7 +18,7 @@ var apputil = apputilmod(awsConfig) ;
 
 var fkey = process.argv[2] || "HR" ;
 var startYear = (process.argv[3] || 2000)-0 ;
-var endYear = (process.argv[4] || 2010)-0 ;
+var endYear = (process.argv[4] || 2005)-0 ;
 
 (function() {	
 	
