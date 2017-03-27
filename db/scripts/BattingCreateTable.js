@@ -24,8 +24,7 @@ var params = {
     AttributeDefinitions: [       
         { AttributeName: "naturalID", AttributeType: "S" },
         { AttributeName: "playerID", AttributeType: "S" },
-        { AttributeName: "yearID", AttributeType: "N" },
-        { AttributeName: "HR", AttributeType: "N" },
+        { AttributeName: "yearID", AttributeType: "N" }
     ],
     ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
     GlobalSecondaryIndexes: [
