@@ -1,4 +1,5 @@
 playerID,yearID,stint,teamID,lgID,G,AB,R,H,2B,3B,HR,RBI,SB,CS,BB,SO,IBB,HBP,SH,SF,GIDP
+zychto01,2016,1,SEA,AL,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ruthba01,1914,1,BOS,AL,5,10,1,2,1,0,0,2,0,,0,4,,0,0,,
 ruthba01,1915,1,BOS,AL,42,92,16,29,10,1,4,21,0,,9,23,,0,2,,
 ruthba01,1916,1,BOS,AL,67,136,18,37,5,3,3,15,0,,10,23,,0,4,,

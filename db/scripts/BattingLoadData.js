@@ -52,11 +52,16 @@ var parser = parse({
              *playerID,yearID,stint,teamID,lgID,G,AB,R,H,2B,3B,HR,RBI,SB,CS,BB,SO,IBB,HBP,SH,SF,GIDP
              */
             var batting = {} ;
-            batting["naturalID"] = uuid() ;  //  used for partition ID
-            batting.playerID = b.playerID ;  //  range key
-            batting.teamID = b.teamID ;  //  range key
-            batting.yearID = parseInt(b.yearID) || 0 ;  // forcing imported data to be a number;  default to 0 if value is null or empty
-            batting.stint = parseInt(b.stint) || 0 ;
+
+            //  batting["naturalID"] = uuid() ;  //  used for partition ID
+
+            batting.stint = parseInt(b.stint) || 1 ;
+
+            batting.playerID = b.playerID ;  //  hash
+            batting.yearIndx = (parseInt(b.yearID) || 9999) + "-" + batting.stint ;
+            batting.yearID = parseInt(b.yearID) || 9999 ;
+
+            batting.teamID = b.teamID;  
             batting.leagueID = b.lgID || "NA" ;  //  NA is neither AL or NL ;
 
             batting.G = parseInt(b.G) || 0 ;  //  number of games played

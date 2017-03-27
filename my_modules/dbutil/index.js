@@ -36,11 +36,10 @@ module.battingStatsByPlayerByYear = function(playerID, yearID, limit, callback) 
     //  DB params
     var params = {
         TableName : "Batting",
-        IndexName : "StatsByPlayerYearIndex",
-        KeyConditionExpression: "playerID = :pid and yearID = :yid",
+        KeyConditionExpression: "playerID = :pid AND begins_with(yearIndx, :yid)",
         ExpressionAttributeValues: {
             ":pid": playerID,
-            ":yid": yearID 
+            ":yid": yearID.toString()
         },
         ScanIndexForward: false,
         Limit: limit || 25,

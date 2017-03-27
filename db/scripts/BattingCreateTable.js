@@ -19,26 +19,15 @@ var params = {
     TableName : "Batting",
     KeySchema: [       
         { AttributeName: "playerID", KeyType: "HASH" },
-        { AttributeName: "naturalID", KeyType: "RANGE"}
+        { AttributeName: "yearIndx", KeyType: "RANGE"}
     ],
     AttributeDefinitions: [       
-        { AttributeName: "naturalID", AttributeType: "S" },
         { AttributeName: "playerID", AttributeType: "S" },
+        { AttributeName: "yearIndx", AttributeType: "S" },
         { AttributeName: "yearID", AttributeType: "N" }
     ],
     ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
     GlobalSecondaryIndexes: [
-      {
-          IndexName : "StatsByPlayerYearIndex",
-          KeySchema : [
-              { AttributeName: "playerID", KeyType: "HASH"},
-              { AttributeName: "yearID", KeyType: "RANGE"}
-          ],
-          Projection: {
-              ProjectionType: "ALL"
-          },
-          ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
-        },      
       {
           IndexName : "StatsByYearIndex",
           KeySchema : [
