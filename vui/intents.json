@@ -67,6 +67,10 @@
     {
     	"intent": "StatsKingForYearRangeIntent",
     	"slots": [
+            {
+                "name": "basicStatName",
+                "type": "MLB_BASIC_STAT"
+              },    		
     	{
     		"name": "startYear",
     		"type": "AMAZON.FOUR_DIGIT_NUMBER"

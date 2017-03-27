@@ -11,8 +11,8 @@ StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
 
 PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
 
-StatsKingForYearRangeIntent who hit the most home runs between {startYear} and {endYear}
-StatsKingForYearRangeIntent between {startYear} and {endYear} who hit the most home runs
+StatsKingForYearRangeIntent who had the most {basicStateName} between {startYear} and {endYear}
+StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStateName}
 
 
 

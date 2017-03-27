@@ -119,6 +119,8 @@ var handlers =  {
 	    	    			t = t + parseFloat(d[stat]) ;	    	    			
 	    	    		}
 	    	    		
+	    	    		console.log("TVAL:  " + t) ;
+	    	    		
 	    	    		t = ((t / data.length)/1000).toFixed(3) ;
 	    	    	}
 
@@ -183,8 +185,13 @@ var handlers =  {
 	    		    console.log(JSON.stringify(err)) ;
 	    		    callback(new Error(err));
 	    		} else {
-	    			
+
 	    			var xval = data[0][stat] ;
+	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
+	    	    	if (y.indexOf(stat) != -1) {
+	    	    		xval = ((xval / data.length)/1000).toFixed(3) ;
+	    	    	}
+	    			
 	    	    	var fullName = data[0].fullName ;
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
@@ -224,6 +231,11 @@ var handlers =  {
 	    		} else {
 	    			
 	    			var xval = data[0][stat] ;
+	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
+	    	    	if (y.indexOf(stat) != -1) {
+	    	    		xval = ((xval / data.length)/1000).toFixed(3) ;
+	    	    	}
+	    			
 	    	    	var fullName = data[0].fullName ;
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;

@@ -2,7 +2,7 @@
   "aws-config": {
     "region": "us-east-1"
   },
-  "batting-data":"../data/Batting.csv",
+  "batting-data":"../data/Batting-Mini.csv",
   "players-data":"../data/Master.csv",
   "teams-data":"../data/Teams.csv",
   "franchise-data":"../data/TeamsFranchises.csv"
