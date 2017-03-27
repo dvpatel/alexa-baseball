@@ -119,7 +119,7 @@ var handlers =  {
 	    	    			t = t + parseFloat(d[stat]) ;	    	    			
 	    	    		}
 	    	    		
-	    	    		t = (t / data.length).toFixed(3) ;
+	    	    		t = ((t / data.length)/1000).toFixed(3) ;
 	    	    	}
 
 	    	    	console.log(result) ;
