@@ -30,17 +30,6 @@ var params = {
     ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
     GlobalSecondaryIndexes: [
       {
-        IndexName : "HomerunsIndex",
-        KeySchema : [
-            { AttributeName: "yearID", KeyType: "HASH"},
-            { AttributeName: "HR", KeyType: "RANGE" }
-        ],
-        Projection: {
-            ProjectionType: "ALL"
-        },
-        ProvisionedThroughput: {ReadCapacityUnits: 5, WriteCapacityUnits:5 },
-      },
-      {
           IndexName : "StatsByPlayerYearIndex",
           KeySchema : [
               { AttributeName: "playerID", KeyType: "HASH"},

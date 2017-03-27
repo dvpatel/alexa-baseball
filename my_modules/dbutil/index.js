@@ -52,29 +52,6 @@ module.battingStatsByPlayerByYear = function(playerID, yearID, limit, callback) 
 }
 
 /*
- * Get home runs given year and hr conditions
- */
-module.homeruns = function(year, hr, limit, callback) {
-
-    //  DB params
-    var params = {
-        TableName : "Batting",
-        IndexName : "HomerunsIndex",
-        KeyConditionExpression: "yearID = :yr and HR > :hr",
-        ExpressionAttributeValues: {
-            ":yr": year,
-            ":hr": hr 
-        },
-        ScanIndexForward: false,
-        Limit: limit || 25,
-    } ;
-
-    docClient.query(params, function(err, data) {
-        callback(err, data) ;
-    });    
-}
-
-/*
  * First chained function to get home runs based on inputed values and results constraint
  */
 module.topStatsByYear = function(yr, fkey, fval, callback) {

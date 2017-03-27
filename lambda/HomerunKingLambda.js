@@ -274,7 +274,7 @@ var handlers =  {
 	    },
 	    
 	    'AMAZON.HelpIntent': function() {
-	        this.emit(':tell', ' Ask sports nation to get you stats for batters, fielders, and pitchers.' +  
+	        this.emit(':tell', ' Ask sports nation to get you stats for your favorite sport player.  ' +  
 	        		'Try asking sports nation for Babe Ruth career stats.');
 	    },
 	    
