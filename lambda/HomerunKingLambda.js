@@ -154,7 +154,7 @@ var handlers =  {
 	    },	    
 	    
 	    /*
-	     *  Player career stats for HR, RBI, SB, and R
+	     *  Player career stats for BA, RBI, home runs and OPS
 	     */
 	    'PlayerCareerStatsIntent' : function() {
 	        var inpFirstname = this.event.request.intent.slots.firstName.value ;
@@ -170,17 +170,24 @@ var handlers =  {
 
 	    	    	var thr = 0 ;  // total home runs ;
 	    	    	var trbi = 0 ; //  total rbi
-	    	    	var tsb = 0 ;  //  total stolen bases
-	    	    	var tr = 0 ;  //  total runs
+	    	    	var tba = 0 ;
+	    	    	var tops = 0 ;
+	    	    	
 	    	    	for (var i = 0; i < data.length; i++) {
-	    	    		var d = data[i] ;	    	    		
-	    	    		thr = thr + d.HR ;
-	    	    		trbi = trbi + d.RBI ;
-	    	    		tsb = tsb + d.SB ;
-	    	    		tr = tr + d.R ;
+	    	    		
+	    	    		var d = data[i] ;
+	    	    		
+	    	    		thr = thr + d.HR ;	    	    		
+	    	    		trbi = trbi + d.RBI ;	    	    		
+	    	    		tba = tba + d.BA ;
+	    	    		tops = tops + d.OPS ;
+	    	    		
 	    	    	}
-	    	    
-	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total runs batted in " + trbi + ", total runs scored " + tr + " and total stolen bases " + tsb ;	    	    	
+
+    	    		tba = ((tba / data.length)/1000).toFixed(3) ;
+    	    		tops = ((tops / data.length)/1000).toFixed(3) ;
+	    	    	
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	
     	    		self.emit(':tell', result);
 
 	    	    }
@@ -277,7 +284,7 @@ var handlers =  {
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
 
-                    var result = "The "+ statDef +" king between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + statDef + " in " + yearID ;
+                    var result = "The "+ statDef +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + statDef + " in " + yearID ;
 		    	    self.emit(':tell', result);		    	    
 	    		}			
 	    		
