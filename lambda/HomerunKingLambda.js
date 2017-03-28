@@ -85,7 +85,7 @@ var sdef = {
  */
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    alexa.appId = '';  // TBD
+    alexa.appId = 'amzn1.ask.skill.bed251cd-36fa-4e36-bc51-5eb70eba67ee';
     alexa.registerHandlers(handlers);
     alexa.execute();
 }
