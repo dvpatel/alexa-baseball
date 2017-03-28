@@ -27,6 +27,7 @@ Runs Scored (R)
 Home Runs (HR)
 Dingers (HR)
 Homers (HR)
+Walks (BB)
 */
 var kv = {
 		"batting average":"BA",
@@ -44,8 +45,19 @@ var kv = {
 		"runs":"R",
 		"runs scored":"R",
 		"home runs":"HR",
+		"homeruns":"HR",		
 		"dingers":"HR",
-		"homers":"HR"
+		"homers":"HR",
+		"walks":"BB",
+		"walk":"BB",
+		"strikeout":"SO",
+		"strike out":"SO",
+		"strikeouts":"SO",
+		"strike outs":"SO",
+		"singles":"H",
+		"hits":"H",
+		"doubles":"2B",
+		"triples":"3B"
 }
 
 /*
@@ -59,7 +71,12 @@ var sdef = {
 "OBP":"On Base Percentage",
 "OPS":"On Base Plus Slugging",
 "R":"Runs Scored",
-"HR":"Home Runs"
+"HR":"Home Runs",
+"BB":"Walks",
+"SO":"Strike Outs",
+"H":"Singles",
+"2B":"Doubles",
+"3B":"Triples"
 }
 
 
@@ -87,7 +104,16 @@ var handlers =  {
 	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
 
+	        console.log("PlayerSpecificCareerStatsIntent:  " + inpFirstname + " " + inpLastname + ", " + basicStatName) ;
+	        
 	        var stat = kv[basicStatName] ;
+	        
+	        if (!stat) {
+	        	var result = "Sorry.  Please try again." ;
+	    		this.emit(':tell', result);
+	    		return ;
+	        }
+	        
 	        var statDef = sdef[stat] ;
 	        
             var self = this ;            
@@ -96,35 +122,30 @@ var handlers =  {
 	    	        console.error(err) ;
 	    	    } else {	    	
 
-	    	    	//  BA, RBI, SB, R, HR ==>  add them together
+	    	    	//  BA, RBI, SB, R, HR, etc. ==>  add them together
 	    	    	//  SLG, OBP, OPS ==>  take average ;
 	    	    	
-	    	    	var x = ["RBI", "SB", "R", "HR"] ;
 	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
 	    	    	
 	    	    	//  console.log("StatName:  " + basicStatName + ", Map:  " + stat + ", statDef:  " + statDef) ;	    	    	
     	    		var t = 0 ;
-	    	    	if (x.indexOf(stat) != -1) {
+	    	    	if (y.indexOf(stat) != -1) {	    	    		
+	    	    		for (var i = 0; i < data.length; i++ ) {
+	    	    			var d = data[i] ;
+	    	    			t = t + parseFloat(d[stat]) ;	    	    			
+	    	    		}
+	    	    			    	    		
+	    	    		t = ((t / data.length)/1000).toFixed(3) ;
+	    	    		
+	    	    	} else {
 	    	    		
 	    	    		for (var i = 0; i < data.length; i++ ) {
 	    	    			var d = data[i] ;
 	    	    			t = t + d[stat] ;	    	    			
 	    	    		}
-	    	    			    	    		
-	    	    	} else if (y.indexOf(stat) != -1) {
 	    	    		
-	    	    		var t = 0 ;
-	    	    		for (var i = 0; i < data.length; i++ ) {
-	    	    			var d = data[i] ;
-	    	    			t = t + parseFloat(d[stat]) ;	    	    			
-	    	    		}
-	    	    		
-	    	    		console.log("TVAL:  " + t) ;
-	    	    		
-	    	    		t = ((t / data.length)/1000).toFixed(3) ;
 	    	    	}
 
-	    	    	console.log(result) ;
     	    		var result = inpFirstname + " " + inpLastname + " career " + statDef + " is " + t ;
     	    		self.emit(':tell', result);
 	    	    }
@@ -136,11 +157,13 @@ var handlers =  {
 	     *  Player career stats for HR, RBI, SB, and R
 	     */
 	    'PlayerCareerStatsIntent' : function() {
-	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
+	        var inpFirstname = this.event.request.intent.slots.firstName.value ;
+	        var inpLastname = this.event.request.intent.slots.lastName.value ;
+	        
+	        console.log("PlayerCareerStatsIntent:  " + inpFirstname + " " + inpLastname) ;
 
             var self = this ;            
-	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
+	    	apputil.battingStatsByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), function(err, data) {
 	    	    if (err) {
 	    	        console.error(err) ;
 	    	    } else {	    	
@@ -176,6 +199,13 @@ var handlers =  {
 
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
 	        var stat = kv[basicStatName] ;
+	        
+	        if (!stat) {
+	        	var result = "Sorry.  Please try again." ;
+	    		this.emit(':tell', result);
+	    		return ;
+	        }
+	        	        
 	        var statDef = sdef[stat] ;
 	        
             var self = this ;            
@@ -212,6 +242,13 @@ var handlers =  {
 	    	
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
 	        var stat = kv[basicStatName] ;
+	        
+	        if (!stat) {
+	        	var result = "Sorry.  Please try again." ;
+	    		this.emit(':tell', result);
+	    		return ;
+	        }	       
+	        
 	        var statDef = sdef[stat] ;
 	        	    	
 	        /*
@@ -258,6 +295,13 @@ var handlers =  {
 	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
 	        	        
 	        var stat = kv[basicStatName] ;
+	        
+	        if (!stat) {
+	        	var result = "Sorry.  Please try again." ;
+	    		this.emit(':tell', result);
+	    		return ;
+	        }	        
+	        
 	        var statDef = sdef[stat] ;
 	        
             var self = this ;            

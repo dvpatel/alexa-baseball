@@ -13,5 +13,16 @@ on base plus slugging
 runs
 runs scored
 home runs
+homeruns
 dingers
 homers
+walks
+walk
+strike out
+strikeout
+strike outs
+strikeouts
+singles
+hits
+doubles
+triples

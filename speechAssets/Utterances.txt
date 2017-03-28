@@ -1,53 +1,53 @@
 PlayerSpecificCareerStatsIntent How many {basicStatName} does {firstName} {lastName} have
 PlayerSpecificCareerStatsIntent How many {basicStatName} did {firstName} {lastName} have
+
 PlayerSpecificCareerStatsIntent What is {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent What's {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent tell me {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent give {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent give me {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent get {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent get me {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent find {firstName} {lastName} career {basicStatName}
+PlayerSpecificCareerStatsIntent find me {firstName} {lastName} career {basicStatName}
+
+PlayerSpecificCareerStatsIntent tell me career {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent give career {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent give me career {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent get career {basicStatName} for {firstName} {lastName}
 PlayerSpecificCareerStatsIntent get me career {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent find career {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent find me career {basicStatName} for {firstName} {lastName}
 
 PlayerCareerStatsIntent What are the career stats for {firstName} {lastName}
+PlayerCareerStatsIntent tell me career stats for {firstName} {lastName}
+PlayerCareerStatsIntent give career stats for {firstName} {lastName}
+PlayerCareerStatsIntent give me career stats for {firstName} {lastName}
+PlayerCareerStatsIntent get career stats for {firstName} {lastName}
 PlayerCareerStatsIntent get me career stats for {firstName} {lastName}
+PlayerCareerStatsIntent find career stats for {firstName} {lastName}
+PlayerCareerStatsIntent find me career stats for {firstName} {lastName}
+
+PlayerCareerStatsIntent What is {firstName} {lastName} career stats
+PlayerCareerStatsIntent What's {firstName} {lastName} career stats
+PlayerCareerStatsIntent tell me {firstName} {lastName} career stats
+PlayerCareerStatsIntent give {firstName} {lastName} career stats
+PlayerCareerStatsIntent give me {firstName} {lastName} career stats
+PlayerCareerStatsIntent get {firstName} {lastName} career stats
+PlayerCareerStatsIntent get me {firstName} {lastName} career stats
+PlayerCareerStatsIntent find {firstName} {lastName} career stats
+PlayerCareerStatsIntent find me {firstName} {lastName} career stats
 
 StatsKingForYearIntent Who had the most {basicStatName} in {givenYear}
+StatsKingForYearIntent tell me {basicStatName} leader from {givenYear}
+StatsKingForYearIntent give {basicStatName} leader from {givenYear}
+StatsKingForYearIntent give me {basicStatName} leader from {givenYear}
+StatsKingForYearIntent get {basicStatName} leader from {givenYear}
+StatsKingForYearIntent get me {basicStatName} leader from {givenYear}
+StatsKingForYearIntent find {basicStatName} leader from {givenYear}
+StatsKingForYearIntent find me {basicStatName} leader from {givenYear}
 StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
 
 PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
-
-StatsKingForYearRangeIntent who had the most {basicStateName} between {startYear} and {endYear}
-StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStateName}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-StatsKingForYearIntent give me the {basicStatName} king for {givenYear}
-StatsKingForYearIntent tell me the {basicStatName} king for {givenYear}
-StatsKingForYearIntent get me the {basicStatName} king for {givenYear}
-StatsKingForYearIntent find the {basicStatName} king for {givenYear}
-StatsKingForYearIntent find me the {basicStatName} king for {givenYear}
-StatsKingForYearIntent give me the {basicStatName} leader for {givenYear}
-StatsKingForYearIntent tell me the {basicStatName} leader for {givenYear}
-StatsKingForYearIntent get me the {basicStatName} leader for {givenYear}
-StatsKingForYearIntent find the {basicStatName} leader for {givenYear}
-StatsKingForYearIntent find me the {basicStatName} leader for {givenYear}
-StatsKingForYearIntent Who had the most {basicStatName} in {givenYear}
-StatsKingForYearIntent Who was {basicStatName} king in {givenYear}
-StatsKingForYearIntent Who was {basicStatName} leader in {givenYear}
-StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
-StatsKingForYearIntent In {givenYear} who was the {basicStatName} leader
-StatsKingForYearIntent In {givenYear} who was the {basicStatName} king
-
-HomerunKingForYearIntent Who has the most home runs
+StatsKingForYearRangeIntent who had the most {basicStatName} between {startYear} and {endYear}
+StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStatName}
