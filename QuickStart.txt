@@ -27,6 +27,6 @@ Here are some examples to get you started.
 
 "Alexa ask Sports Nation between 1992 and 1994 who had most runs?"
 
-Future version of the skill will include stats for teams, fielders, and pitchers.  And further own, the Sports Nation will be expanded to include stats for other sports.
+Future version of the skill will include stats for teams, fielders, pitchers, and other sports.
 
-Thanks for using Sports Nation.  Have fun!
+Thanks and Have fun!
