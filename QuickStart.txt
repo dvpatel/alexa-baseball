@@ -1,0 +1,32 @@
+SportsNation skills allows you to get batting statistics for professional baseball players.  The supported statistics for batters are:
+	*  Batting average
+	*  RBI or runs batted in
+	*  Slugging percentage
+	*  Stolen bases
+	*  On base percentage, 
+	*  On base plus slugging
+	*  Runs or runs scored
+	*  Home runs
+	*  Walks
+	*  Strike outs
+	*  Singles or hits
+
+Speak the players name and ask for any one of these statistics either for career or specific year.  You can also get leader stats for a year or a range.
+
+Here are some examples to get you started.
+
+"Alexa, ask Sports Nation to get career home runs for Babe Ruth"
+
+"Alexa, ask Sports Nation How many runs did Ted Williams have?"
+
+"Alexa, as Sports Nation In 1946 who had the most strike outs?"
+
+"Alexa, get me career stolen bases for Ricky Hendersion from Sports Nation."
+
+"Alexa ask Sports Nation Who had the most RBIs in 1952?"
+
+"Alexa ask Sports Nation between 1992 and 1994 who had most runs?"
+
+Future version of the skill will include stats for teams, fielders, and pitchers.  And further own, the Sports Nation will be expanded to include stats for other sports.
+
+Thanks for using Sports Nation.  Have fun!
