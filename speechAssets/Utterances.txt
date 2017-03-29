@@ -19,6 +19,39 @@ PlayerSpecificCareerStatsIntent get me career {basicStatName} for {firstName} {l
 PlayerSpecificCareerStatsIntent find career {basicStatName} for {firstName} {lastName}
 PlayerSpecificCareerStatsIntent find me career {basicStatName} for {firstName} {lastName}
 
+PlayerSpecificCareerStatsIntent tell me {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent give {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent give me {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent get {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent get me {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent find {firstName} {lastName} {basicStatName}
+PlayerSpecificCareerStatsIntent find me {firstName} {lastName} {basicStatName}
+
+PlayerSpecificCareerStatsIntent tell me {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent give {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent give me {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent get {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent get me {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent find {basicStatName} for {firstName} {lastName}
+PlayerSpecificCareerStatsIntent find me {basicStatName} for {firstName} {lastName}
+
+PlayerBasicStatByYearIntent tell me {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent give {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent give me {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent get {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent get me {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent find {firstName} {lastName} {basicStatName} for {playerYear}
+PlayerBasicStatByYearIntent find me {firstName} {lastName} {basicStatName} for {playerYear}
+
+PlayerBasicStatByYearIntent tell me {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent give {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent give me {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent get {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent get me {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent find {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent find me {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
+
 PlayerCareerStatsIntent What are the career stats for {firstName} {lastName}
 PlayerCareerStatsIntent tell me career stats for {firstName} {lastName}
 PlayerCareerStatsIntent give career stats for {firstName} {lastName}
@@ -48,6 +81,5 @@ StatsKingForYearIntent find {basicStatName} leader from {givenYear}
 StatsKingForYearIntent find me {basicStatName} leader from {givenYear}
 StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
 
-PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
 StatsKingForYearRangeIntent who had the most {basicStatName} between {startYear} and {endYear}
 StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStatName}
