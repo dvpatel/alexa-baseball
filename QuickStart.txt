@@ -21,7 +21,7 @@ Here are some examples to get you started.
 
 "Alexa, as Sports Nation In 1946 who had the most strike outs?"
 
-"Alexa, get me career stolen bases for Ricky Hendersion from Sports Nation."
+"Alexa, get me career stolen bases for Ricky Henderson from Sports Nation."
 
 "Alexa ask Sports Nation Who had the most RBIs in 1952?"
 
