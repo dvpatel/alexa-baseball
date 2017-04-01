@@ -5,6 +5,18 @@
 var async = require('async');
 var dbm = require('dbutil');
 
+/*
+ * Memory cache
+ */
+const NodeCache = require( "node-cache" );
+const memcache = new NodeCache();
+
+
+/*
+ * Test for caching ;
+ */
+var counter = 0 ;
+
 module.exports = function(awsConfig) {
 
 	var minYear = 1871 ;
@@ -92,10 +104,8 @@ module.exports = function(awsConfig) {
 	        playerLookup,
 	        teamNameLookup
 	    ], function(error, data) {
-	    	if (!error) {
-	    		
-	    		var fkey = kv[basicStatName] ;
-	    		
+	    	if (!error) {	    		
+	    		var fkey = kv[basicStatName] ;	    		
 	    		data.statKey = fkey ;
 	    		data.statName = sdef[fkey] ;	    		
 	    		data.sort(function(a,b) { return b[fkey] - a[fkey] ; } ) ;
@@ -111,23 +121,36 @@ module.exports = function(awsConfig) {
 	/*
 	 * Get batting stats for a player using first and last name and year;
 	 */
-	module.battingStatsByPlayer = function(inpFirstname, inpLastname, appCallback) {	
+	module.battingStatsByPlayer = function(inpFirstname, inpLastname, basicStatName, appCallback) {	
 
-		if (!inpFirstname || !inpLastname) {
-			var error = "ERROR:  Please provide first and last name." ;
-			appCallback(error, null) ;		
-			return ;
+		function dvCheck(callback) {					
+
+			/*
+			 * If basicStatName is provided, check if valid ;
+			 */
+			if (basicStatName) {
+				var r = isBasicStatNameValid(basicStatName) ;
+		        if (!(r === true)) {
+					callback(r, null) ;
+		        } else {
+		        	callback() ;
+		        }
+			} else {
+				callback() ;
+			}
+	        
 		}
-
+		
 		function lookupPlayer(callback) {
 			playerLookupByName(inpFirstname, inpLastname, function(err, data) {							
 		        if (err) {
-		            console.error(err) ;
+		            console.error("Player lookup error:  " + err) ;
+		            callback(err, null) ;
 		        } else {		        	
 		        	
 		        	//  Could be more than 1 player with same name ;  For now, return first found player;  Later, make interactive
-		        	if (data.length > 0) {
-			        	callback(null, data[0]) ;		        		
+		        	if (data.length > 0) {			        	
+		        		callback(null, data[0]) ;		        		
 		        	} else {
 		    			console.error("Cannot find playerID for " + inpFirstname + " " + inpLastname) ;		        		
 		    			var error = "Cannot find player information.  Please try again." ;
@@ -139,22 +162,47 @@ module.exports = function(awsConfig) {
 		}
 
 		function lookupBattingStats(inp, callback) {
-			var pid = inp.playerID ;		
-			dbutil.battingStatsByPlayer(pid, function(err, data) {
-		        if (err) {
-		            console.error(err) ;
-		        } else {
-		        	callback(null, data.Items) ;
-		        }				
-			}) ;			
+			var pid = inp.playerID ;						    	
+			var cacheKey = "batting."+pid ;			
+			var cacheData = getCache(cacheKey) ;	
+			if (cacheData) {
+				console.log("Found data for " + cacheKey) ;
+				callback(null, cacheData) ;
+			} else {
+				dbutil.battingStatsByPlayer(pid, function(err, data) {
+			        if (err) {
+			            console.error(err) ;
+			        } else {			        	
+			        	console.log("Adding player batting stat to cache:  " + cacheKey) ;
+			        	cacheObject(cacheKey, data.Items) ;		        	
+			        	callback(null, data.Items) ;		        	
+			        }				
+				}) ;			
+			}
 		}
 		
-	    async.waterfall([ 
-	        lookupPlayer,
+	    async.waterfall([
+	    	dvCheck,
+	    	lookupPlayer,
 	        lookupBattingStats,
 	        teamNameLookup
-	    ], function(error, result) {	    	
-	    	appCallback(error, result) ;	    	
+	    ], function(error, data) {	   	    	
+	    	if (!error) {
+	    		
+	    		if (basicStatName) {
+		    		var fkey = kv[basicStatName] ;	    		
+		    		data.statKey = fkey ;
+		    		data.statName = sdef[fkey] ;	    			
+	    		}
+	    		
+		    	data.sort(function (a, b) {
+		    		return a.yearID - b.yearID;
+		    	});
+		    		    	
+		    	appCallback(error, data) ;	    		    		
+	    	} else {
+		    	appCallback(error, null) ;	    		    		
+	    	}	    		    	
 	    }) ;   
 	}	
 	
@@ -201,14 +249,23 @@ module.exports = function(awsConfig) {
 
 	        var fkey = kv[basicStatName] ;
 			var pid = inp.playerID ;
-			
-			dbutil.battingStatsByPlayerByYear(pid, inpYear, 25, function(err, data) {
-		        if (err) {
-		            console.error(err) ;
-		        } else {
-		        	callback(null, data.Items) ;
-		        }				
-			}) ;						
+
+			var cacheKey = "batting." + pid + "." + inpYear ;
+			var cacheData = getCache(cacheKey) ;	
+			if (cacheData) {
+				console.log("Found cache data for " + cacheKey) ;
+				callback(null, cacheData) ;
+			} else {
+				dbutil.battingStatsByPlayerByYear(pid, inpYear, 25, function(err, data) {
+			        if (err) {
+			            console.error(err) ;
+			        } else {			        	
+			        	console.log("Adding to cache:  " + cacheKey) ;
+			        	cacheObject(cacheKey, data.Items) ;
+			        	callback(null, data.Items) ;
+			        }				
+				}) ;						
+			}			
 		}
 		
 	    async.waterfall([ 
@@ -234,7 +291,7 @@ module.exports = function(awsConfig) {
 	    	}	    	
 	    	
 	    }) ;   
-	},
+	}
 	
 	/*
 	 * Convert batting stats to 3 digits ;
@@ -246,10 +303,33 @@ module.exports = function(awsConfig) {
     	if (y.indexOf(statKey) != -1) {
     		xval = ((xval / data.length)/1000).toFixed(3) ;
     	}
-    	return xval ;
-    	
+    	return xval ;    	
+	}
+	
+	module.getName = function(slot, slotKey) {		
+		//var inpFirstname = ((slots.firstName) ? slots.firstName.value : "NO_FIRST_NAME").toLowerCase() ;
+		
+		if (slot && slot[slotKey] && slot[slotKey].value) {
+			return slot[slotKey].value.toLowerCase() ;
+		} else {
+			console.error("Cannot get module.getName value for " + JSON.stringify(slot)) ;
+			return "NO_"+slotKey ;
+		}
+		
 	}
 
+	module.getNumber = function(slot, slotKey) {				
+        //var inpYear = (slots.playerYear) ? slots.playerYear.value-0 : "NO_DATE"
+		
+		if (slot && slot[slotKey] && slot[slotKey].value) {
+			return slot[slotKey].value - 0 ;
+		} else {
+			console.error("Cannot get module.getNumber value for " + JSON.stringify(slot)) ;
+			return "NO_" + slotKey ;
+		}			
+	}
+
+	
 	/*
 	 * KV ;
 	 */
@@ -366,12 +446,12 @@ module.exports = function(awsConfig) {
 
 		if (inpYear < minYear) {
 			console.error("Year Error:  " + inpYear) ;			
-			return "Basbeall did not exisit before " + inpYear + ".  Please say a year after "+ minYear ;
+			return "Baseball did not exisit before " + inpYear + ".  Please say a year after "+ minYear ;
 		}
 		
 		if (inpYear > maxYear) {			
 			console.error("Year Error:  " + inpYear) ;			
-			return "Baseball will exist in the future.  For now, please say a year less than " + maxYear ;						
+			return "Baseball will probably exist in the future.  For now, please say a year less than " + maxYear ;						
 		}
 		
 		return true ;		
@@ -411,7 +491,18 @@ module.exports = function(awsConfig) {
 		
 		return true ;
 	}
-		
+	
+	/*
+	 * Cache utility
+	 */	
+	function cacheObject(key, val) {
+		memcache.set(key,val) ;
+	}
+	
+	function getCache(key) {		
+		return memcache.get(key) ;
+	}
+	
 	/*
 	 * function to lookup team name based on playerID and yearID 
 	 */
@@ -448,15 +539,27 @@ module.exports = function(awsConfig) {
 	function playerLookupByName(inpFirstname, inpLastname, callback) {
 		
 		if (!inpFirstname || !inpLastname) {
-			console.error("Error:  missing first or last name") ;
-			
-			var error = "Please provide player name." ;
+			console.error("Error:  missing player name :  " + inpFirstname + ", " + inpLastname) ;
+			var error = "No such player.  Please provide valid player name." ;
 			callback(error, null) ;		
 			return ;
 		} else {
-			dbutil.playerLookupByName(inpFirstname, inpLastname, function(err, data) {
-				callback(err, data.Items) ;		    	
-			}) ;
+			var key = "player."+inpFirstname+"."+inpLastname ;
+			var cacheData = getCache(key) ;
+			if (cacheData) {				
+				console.log("Found data in cache for key: " + key) ;
+				callback(null, cacheData) ;				
+			} else {
+				dbutil.playerLookupByName(inpFirstname, inpLastname, function(err, data) {	
+					
+					if (!err) {
+						console.log("Adding to cache:  " + key) ;					
+						cacheObject(key, data.Items) ;										
+					}
+					
+					callback(err, data.Items) ;									
+				}) ;
+			}			
 		}		
 	}
 

@@ -30,53 +30,38 @@ var handlers =  {
 	     */
 	    'PlayerSpecificCareerStatsIntent' : function() {
 	    	
-	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
-	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
+	    	var slots = this.event.request.intent.slots ;
 
-	        console.log("PlayerSpecificCareerStatsIntent:  " + inpFirstname + " " + inpLastname + ", " + basicStatName) ;
-	        
-	        var stat = kv[basicStatName] ;
-	        
-	        if (!stat) {
-	        	var result = "Sorry.  Please try again." ;
-	    		this.emit(':tell', result);
-	    		return ;
-	        }
-	        
-	        var statDef = sdef[stat] ;
-	        
+	        var basicStatName = apputil.getName(slots, "basicStatName") ;	    	
+	    	var inpFirstname = apputil.getName(slots, "firstName") ;
+	        var inpLastname = apputil.getName(slots, "lastName") ;
+	        	        
             var self = this ;            
-	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, function(err, data) {
+	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, basicStatName, function(err, data) {
 	    	    if (err) {
-	    	        console.error(err) ;
+	    	        console.error("PlayerSpecificCareerStatsIntent Error:  " + err) ;
+    	    		self.emit(':tell', err);
 	    	    } else {	    	
 
 	    	    	//  BA, RBI, SB, R, HR, etc. ==>  add them together
-	    	    	//  SLG, OBP, OPS ==>  take average ;
-	    	    	
+	    	    	//  SLG, OBP, OPS ==>  take average ;	    	    	
 	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
 	    	    	
-	    	    	//  console.log("StatName:  " + basicStatName + ", Map:  " + stat + ", statDef:  " + statDef) ;	    	    	
     	    		var t = 0 ;
-	    	    	if (y.indexOf(stat) != -1) {	    	    		
+	    	    	if (y.indexOf(data.statKey) != -1) {	    	    		
 	    	    		for (var i = 0; i < data.length; i++ ) {
 	    	    			var d = data[i] ;
-	    	    			t = t + parseFloat(d[stat]) ;	    	    			
-	    	    		}
-	    	    			    	    		
-	    	    		t = ((t / data.length)/1000).toFixed(3) ;
-	    	    		
-	    	    	} else {
-	    	    		
+	    	    			t = t + parseFloat(d[data.statKey]) ;	    	    			
+	    	    		}	    	    			    	    		
+	    	    		t = ((t / data.length)/1000).toFixed(3) ;	    	    		
+	    	    	} else {	    	    		
 	    	    		for (var i = 0; i < data.length; i++ ) {
 	    	    			var d = data[i] ;
-	    	    			t = t + d[stat] ;	    	    			
-	    	    		}
-	    	    		
+	    	    			t = t + d[data.statKey] ;	    	    			
+	    	    		}	    	    		
 	    	    	}
 
-    	    		var result = inpFirstname + " " + inpLastname + " career " + statDef + " is " + t ;
+    	    		var result = inpFirstname + " " + inpLastname + " career " + data.statName + " is " + t ;
     	    		self.emit(':tell', result);
 	    	    }
 	    	    
@@ -87,15 +72,19 @@ var handlers =  {
 	     *  Player career stats for BA, RBI, home runs and OPS
 	     */
 	    'PlayerCareerStatsIntent' : function() {
-	        var inpFirstname = this.event.request.intent.slots.firstName.value ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value ;
 	        
-	        console.log("PlayerCareerStatsIntent:  " + inpFirstname + " " + inpLastname) ;
-
+	    	var slots = this.event.request.intent.slots ;
+	    	
+	    	var inpFirstname = apputil.getName(slots, "firstName") ;
+	        var inpLastname = apputil.getName(slots, "lastName") ;
+	        
             var self = this ;            
-	    	apputil.battingStatsByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), function(err, data) {
+            
+            //  null indicates get all status, this is placeholder for basicStatName
+	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, null, function(err, data) {
 	    	    if (err) {
-	    	        console.error(err) ;
+	    	        console.error("PlayerCareerStatsIntent Error:  " + err) ;
+    	    		self.emit(':tell', err);
 	    	    } else {	    	
 
 	    	    	var thr = 0 ;  // total home runs ;
@@ -132,9 +121,9 @@ var handlers =  {
 	    'StatsKingForYearIntent': function () {	    		    	
 	    	
 	    	var slots = this.event.request.intent.slots ;
-	    	
-	        var basicStatName = ((slots.basicStatName) ? slots.basicStatName.value : "NO_STAT").toLowerCase() ;	    	
-	        var endYear = (slots.givenYear) ? slots.givenYear.value-0 : "NO_DATE"
+
+	        var basicStatName = apputil.getName(slots, "basicStatName") ;	    	
+	        var endYear = apputil.getNumber(slots, "givenYear") ;
 	        var startYear = endYear-1 ;
 	        
             var self = this ;            
@@ -159,47 +148,26 @@ var handlers =  {
 	     */
 	    'StatsKingForYearRangeIntent': function () {	    	
 
-	    	var startYear = this.event.request.intent.slots.startYear.value - 0 ;
-	        var endYear = this.event.request.intent.slots.endYear.value - 0 ;
+	    	var slots = this.event.request.intent.slots ;
 	    	
-	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
-	        var stat = kv[basicStatName] ;
-	        
-	        if (!stat) {
-	        	var result = "Sorry.  Please try again." ;
-	    		this.emit(':tell', result);
-	    		return ;
-	        }	       
-	        
-	        var statDef = sdef[stat] ;
-	        	    	
-	        /*
-	         * Saving on DynamoDB cost and time
-	         */
-	        if ((endYear-startYear) > 10) {
-	        	var result = "Sorry.  Please pick a time range that is less than 10 years." ;
-	    	    self.emit(':tell', result);	        	
-	        }
-	        
+	        var startYear = apputil.getNumber(slots, "startYear") ;
+	        var endYear = apputil.getNumber(slots, "endYear") ;
+	        var basicStatName = apputil.getName(slots, "basicStatName") ;
+	        	        
             var self = this ;            
-	    	apputil.maxStatByYears(startYear, endYear, stat, function(err, data) {		
+	    	apputil.maxStatByYears(startYear, endYear, basicStatName, function(err, data) {		
 	    		
 	    		if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));
+	    		    console.error("Error:  " + err) ;
+	    		    self.emit(':tell', err) ;	    		    
 	    		} else {
-	    			
-	    			var xval = data[0][stat] ;
-	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
-	    	    	if (y.indexOf(stat) != -1) {
-	    	    		xval = ((xval / data.length)/1000).toFixed(3) ;
-	    	    	}
-	    			
+
+                    var xval = apputil.battingUtil(data, data.statKey) ;
 	    	    	var fullName = data[0].fullName ;
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
 
-                    var result = "The "+ statDef +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + statDef + " in " + yearID ;
+                    var result = "The "+ data.statName +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + data.statName + " in " + yearID ;
 		    	    self.emit(':tell', result);		    	    
 	    		}			
 	    		
@@ -213,10 +181,10 @@ var handlers =  {
 	    	
 	    	var slots = this.event.request.intent.slots ;
 	    	
-	        var inpFirstname = ((slots.firstName) ? slots.firstName.value : "NO_FIRST_NAME").toLowerCase() ;
-	        var inpLastname = ((slots.lastName) ? slots.lastName.value : "NO_LAST_NAME").toLowerCase() ;
-	        var basicStatName = ((slots.basicStatName) ? slots.basicStatName.value : "NO_STAT").toLowerCase() ;	    	
-	        var inpYear = (slots.playerYear) ? slots.playerYear.value-0 : "NO_DATE"
+	    	var inpFirstname = apputil.getName(slots, "firstName") ;
+	        var inpLastname = apputil.getName(slots, "lastName") ;
+	        var basicStatName = apputil.getName(slots, "basicStatName") ;	    	
+	        var inpYear = apputil.getNumber(slots, "playerYear") ;
 	        
             var self = this ;            
 	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, basicStatName, function(err, data) {

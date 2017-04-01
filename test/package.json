@@ -7,6 +7,7 @@
     "async": "*",
     "aws-sdk":"*",
     "nconf":"*",
+    "node-cache":"*",
     "apputil":"file:../my_modules/apputil",
     "dbutil":"file:../my_modules/dbutil"
   },

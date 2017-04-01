@@ -12,10 +12,23 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-var inpFirstname = ((process.argv[2]) ? process.argv[2]: "NO_FIRST_NAME").toLowerCase() ;
-var inpLastname = ((process.argv[3]) ? process.argv[3]: "NO_FIRST_NAME").toLowerCase() ;
-var basicStatName = ((process.argv[4]) ? process.argv[4]: "NO_STAT").toLowerCase() ;	    	
-var inpYear = (process.argv[5]) ? process.argv[5]-0 : "NO_DATE" ;
+var slot = {} ;
+slot.firstName = {} ;
+slot.lastName = {} ;
+slot.basicStatName = {} ;
+slot.playerYear = {} ;
+
+slot.firstName.value = process.argv[2] ;
+slot.lastName.value = process.argv[3] ;
+slot.basicStatName.value = process.argv[4] ;
+slot.playerYear.value = process.argv[5] ;
+
+console.log(slot) ;
+
+var inpFirstname = apputil.getName(slot, "firstName") ;
+var inpLastname = apputil.getName(slot, "lastName") ;
+var basicStatName = apputil.getName(slot, "basicStatName") ;
+var inpYear = apputil.getNumber(slot, "playerYear") ;
 
 (function() {	
 
@@ -23,18 +36,22 @@ var inpYear = (process.argv[5]) ? process.argv[5]-0 : "NO_DATE" ;
 	    if (err) {
 	        console.error(err) ;
 	    } else {	    	
+	    	
+	    	console.log("Length:  " + data.length) ;
+	    	
 	    	for (var i = 0; i < data.length; i++) {
 	    		var r = data[i] ;	    	    	
-	    	    	var team = r.name ;	    	    		
-	    	    	var results = [
-	    	    	        "While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName,
+	    	    var team = r.name ;	    	    		
+	    	    var results = [
+	    	    	"While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName,
 			        inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName + " in " + inpYear + ".  He was playing for the " + team,
-	    	    	        "In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName + " while playing for the " + team] ;
+	    	    	"In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName + " while playing for the " + team] ;
 
-	    	    	var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
-
-	    	    	console.log(results[rindx]) ;
+	    	    var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
+	    	    console.log(results[rindx]) ;
 	    	}	    
 	    }
 	}) ;
 })() ;
+
+console.log("Done.") ;
