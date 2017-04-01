@@ -11,76 +11,6 @@ var apputil = apputilmod(awsConfig) ;
 
 
 /*
-Batting Average (BA)
-Run Batted In (RBI)
-RBI
-Slugging Percentage (SLG)
-Slugging Average (SLG)
-Stolen Base (SB)
-Stolen Bases (SB)
-OBP (OBP)
-On base percentage (OBP)
-OPS (OPS)
-On base plus slugging (OPS)
-Runs (R)
-Runs Scored (R)
-Home Runs (HR)
-Dingers (HR)
-Homers (HR)
-Walks (BB)
-*/
-var kv = {
-		"batting average":"BA",
-		"run batted in":"RBI",
-		"runs batted in":"RBI",	        		
-		"rbi":"RBI",
-		"slugging percentage":"SLG",
-		"slugging average":"SLG",
-		"stolen base":"SB",
-		"stolen bases":"SB",
-		"obp":"OBP",
-		"on base percentage":"OBP",
-		"ops":"OPS",
-		"on base plus slugging":"OPS",
-		"runs":"R",
-		"runs scored":"R",
-		"home runs":"HR",
-		"homeruns":"HR",		
-		"dingers":"HR",
-		"homers":"HR",
-		"walks":"BB",
-		"walk":"BB",
-		"strikeout":"SO",
-		"strike out":"SO",
-		"strikeouts":"SO",
-		"strike outs":"SO",
-		"singles":"H",
-		"hits":"H",
-		"doubles":"2B",
-		"triples":"3B"
-}
-
-/*
-*  Stats Key Names
-*/
-var sdef = {
-"BA":"Batting Average",
-"RBI":"Runs Batted In",
-"SLG":"Slugging Percentage",
-"SB":"Stolen Bases",
-"OBP":"On Base Percentage",
-"OPS":"On Base Plus Slugging",
-"R":"Runs Scored",
-"HR":"Home Runs",
-"BB":"Walks",
-"SO":"Strike Outs",
-"H":"Singles",
-"2B":"Doubles",
-"3B":"Triples"
-}
-
-
-/*
  *  Lambda handler for homerunking
  */
 exports.handler = function(event, context, callback) {
@@ -199,41 +129,26 @@ var handlers =  {
 	    /*
 	     * Get stats leader for given year:  BA, RBI, SLG, SB, OBP, OPS, R, HR
 	     */
-	    'StatsKingForYearIntent': function () {	    	
+	    'StatsKingForYearIntent': function () {	    		    	
 	    	
-	        var endYear = this.event.request.intent.slots.givenYear.value - 0 ;
-	        var startYear = endYear - 1 ;
-
-	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;	        
-	        var stat = kv[basicStatName] ;
-	        
-	        if (!stat) {
-	        	var result = "Sorry.  Please try again." ;
-	    		this.emit(':tell', result);
-	    		return ;
-	        }
-	        	        
-	        var statDef = sdef[stat] ;
+	    	var slots = this.event.request.intent.slots ;
+	    	
+	        var basicStatName = ((slots.basicStatName) ? slots.basicStatName.value : "NO_STAT").toLowerCase() ;	    	
+	        var endYear = (slots.givenYear) ? slots.givenYear.value-0 : "NO_DATE"
+	        var startYear = endYear-1 ;
 	        
             var self = this ;            
-	    	apputil.maxStatByYears(startYear, endYear, stat, function(err, data) {		
-	    		
-	    		if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));
-	    		} else {
-
-	    			var xval = data[0][stat] ;
-	    	    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
-	    	    	if (y.indexOf(stat) != -1) {
-	    	    		xval = ((xval / data.length)/1000).toFixed(3) ;
-	    	    	}
-	    			
+	    	apputil.maxStatByYears(startYear, endYear, basicStatName, function(err, data) {			    		
+	    		if (err) {	    			
+	    		    console.error("Error:  " + err) ;	    		    
+	    		    self.emit(':tell', err) ;	    		    
+	    		} else {	    			
+                    var xval = apputil.battingUtil(data, data.statKey) ;
 	    	    	var fullName = data[0].fullName ;
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
 
-	                var result = fullName + " had the most " + statDef + " at " + xval + " in " + yearID ;
+	                var result = fullName + " had the most " + data.statName + " at " + xval + " in " + yearID ;
 		    	    self.emit(':tell', result);		    	    
 	    		}				    		
 	    	}) ;	        
@@ -296,41 +211,33 @@ var handlers =  {
 	     */
 	    'PlayerBasicStatByYearIntent' : function() {
 	    	
-	        var inpYear = this.event.request.intent.slots.playerYear.value - 0 ;
-	        var inpFirstname = this.event.request.intent.slots.firstName.value.toLowerCase() ;
-	        var inpLastname = this.event.request.intent.slots.lastName.value.toLowerCase() ;
-	        var basicStatName = this.event.request.intent.slots.basicStatName.value.toLowerCase() ;
-	        	        
-	        var stat = kv[basicStatName] ;
-	        
-	        if (!stat) {
-	        	var result = "Sorry.  Please try again." ;
-	    		this.emit(':tell', result);
-	    		return ;
-	        }	        
-	        
-	        var statDef = sdef[stat] ;
+	    	var slots = this.event.request.intent.slots ;
+	    	
+	        var inpFirstname = ((slots.firstName) ? slots.firstName.value : "NO_FIRST_NAME").toLowerCase() ;
+	        var inpLastname = ((slots.lastName) ? slots.lastName.value : "NO_LAST_NAME").toLowerCase() ;
+	        var basicStatName = ((slots.basicStatName) ? slots.basicStatName.value : "NO_STAT").toLowerCase() ;	    	
+	        var inpYear = (slots.playerYear) ? slots.playerYear.value-0 : "NO_DATE"
 	        
             var self = this ;            
-	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, function(err, data) {
+	    	apputil.battingStatsByYearByPlayer(inpFirstname, inpLastname, inpYear, basicStatName, function(err, data) {
 	    	    if (err) {
-	    		    console.log(JSON.stringify(err)) ;
-	    		    callback(new Error(err));	    	    	
+	    	    	
+	    		    console.error("Error:  " + err) ;	    		    
+	    		    self.emit(':tell', err) ;	    		    
+	    	    	
 	    	    } else {	    		    	    	
 	    	    	for (var i = 0; i < data.length; i++) {
 	    	    		
 	    	    		var r = data[i] ;	    	    	
 	    	    		var team = r.name ;	    	    		
 	    	    		var results = [
-	    	    			"While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef,
-	    	    			inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef + " in " + inpYear + ".  He was playing for the " + team,
-	    	    			"In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[stat] + " " + statDef + " while playing for the " + team] ;
+                            "While playing for the " + team + " in " + inpYear + ", "  + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName,
+                            inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName + " in " + inpYear + ".  He was playing for the " + team,
+                            "In " + inpYear + ", " + inpFirstname + " " + inpLastname + " had " + r[data.statKey] + " " + data.statName + " while playing for the " + team] ;
 
 	    	    		var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
-
-	    	    		console.log(results[rindx]) ;
-	    	    		self.emit(':tell', results[rindx]);
 	    	    		
+	    	    		self.emit(':tell', results[rindx]);	    	    		
 	    	    	}	    	    		    	    	
 	    	    }
 	    	}) ;	        
@@ -342,7 +249,6 @@ var handlers =  {
 	    },
 	    
 	    'Unhandled': function() {
-	        console.log("UNHANDLED");
-	        this.emit(':ask', 'Sorry, I didn\'t get that. Try asking something like, Who was the home run king for 1989');
+	        this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989');
 	    }
 };

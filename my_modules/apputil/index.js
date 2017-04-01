@@ -7,8 +7,12 @@ var dbm = require('dbutil');
 
 module.exports = function(awsConfig) {
 
+	var minYear = 1871 ;
+	var maxYear = 2016 ; //  make it dynamic in the future ;
+	var maxDateRange = 10;  //  max of 10 years ;
+	
 	var dbutil = dbm(awsConfig) ;
-	var module = {} ;
+	var module = {} ;	
 
 	/*
 	 * Lookup player by first and last name ;
@@ -27,30 +31,27 @@ module.exports = function(awsConfig) {
 	/*
 	 * Return top stat for a given date start and end year range
 	 */
-	module.maxStatByYears = function(startYear, endYear, fkey, appCallback) {
-		
-		if (startYear > endYear) {
-			var error = "ERROR:  start year cannot be greater than end year." ;
-			appCallback(error, null) ;
-			return ;
-		}
-
-		// Return today's date and time
-		var currentTime = new Date()
-		var currentYear = currentTime.getFullYear()
-		if (endYear > currentYear) {
-			var error = "ERROR:  Current year is " + currentYear + ", not " + endYear + ".  Not there yet." ;
-			appCallback(error, null) ;		
-			return ;
-		}
-		
-		if (startYear < 1871) {
-			var error = "ERROR:  Basbeall did not exisit before " + startYear + ".  Please enter value greater than 1871." ;
-			appCallback(error, null) ;		
-			return ;			
+	module.maxStatByYears = function(startYear, endYear, basicStatName, appCallback) {
+				
+		function dvCheck(callback) {					
+	        var r = isDateRangeValid(startYear, endYear) ;
+	        if (!(r === true)) {
+		        console.error("Date DV failure:  " + r) ;	        
+				callback(r, null) ;
+	        } else {
+	        	callback() ;
+	        }			
 		}
 		
 		function statsData(callback) {
+			
+			//  check if basic stat name is available;
+			var r = isBasicStatNameValid(basicStatName) ;
+	        if (!(r === true)) {
+				callback(r, null) ;
+				return ;
+	        } 			
+
 		    var yrRange = [] ;
 		    var n = endYear - startYear ; 
 
@@ -58,6 +59,7 @@ module.exports = function(awsConfig) {
 		    	yrRange.push(endYear - i) ;	
 		    }
 
+		    var fkey = kv[basicStatName] ;
 		    var fval = 0 ;
 		    var results = [] ;
 		    async.eachSeries(yrRange,
@@ -84,16 +86,25 @@ module.exports = function(awsConfig) {
 		    ) ;
 		}
 		
-	    async.waterfall([ 
+	    async.waterfall([
+	    	dvCheck,
 	        statsData,
 	        playerLookup,
 	        teamNameLookup
-	    ], function(error, nr) {
-	    	
-	    	//  Sort the results and return ;
-	    	nr.sort(function(a,b) { return b[fkey] - a[fkey] ; } ) ;	    		    	
-	    	appCallback(error, nr) ;
-	    	
+	    ], function(error, data) {
+	    	if (!error) {
+	    		
+	    		var fkey = kv[basicStatName] ;
+	    		
+	    		data.statKey = fkey ;
+	    		data.statName = sdef[fkey] ;	    		
+	    		data.sort(function(a,b) { return b[fkey] - a[fkey] ; } ) ;
+	    		
+		    	appCallback(error, data) ;	    		
+		    	
+	    	} else {
+		    	appCallback(error, null) ;	    		
+	    	}	    	
 	    }) ;		
 	}
 
@@ -118,7 +129,8 @@ module.exports = function(awsConfig) {
 		        	if (data.length > 0) {
 			        	callback(null, data[0]) ;		        		
 		        	} else {
-		    			var error = "ERROR:  Cannot find playerID for " + inpFirstname + " " + inpLastname  ;
+		    			console.error("Cannot find playerID for " + inpFirstname + " " + inpLastname) ;		        		
+		    			var error = "Cannot find player information.  Please try again." ;
 		    			callback(error, null) ;
 		        	}		        	
 		        }				
@@ -149,20 +161,19 @@ module.exports = function(awsConfig) {
 	/*
 	 * Get batting stats for a player using first and last name and year;
 	 */
-	module.battingStatsByYearByPlayer = function(inpFirstname, inpLastname, inpYear, appCallback) {	
+	module.battingStatsByYearByPlayer = function(inpFirstname, inpLastname, inpYear, basicStatName, appCallback) {	
 
-		if (!inpFirstname || !inpLastname) {
-			var error = "ERROR:  Please provide first and last name." ;
-			appCallback(error, null) ;		
-			return ;
+
+		function dvCheck(callback) {					
+	        var r = isDateValid(inpYear) ;
+	        if (!(r === true)) {
+		        console.error("Date DV failure:  " + r) ;	        
+				callback(r, null) ;
+	        } else {
+	        	callback() ;
+	        }			
 		}
 
-		if (!inpYear) {
-			var error = "ERROR:  Please provide valid year." ;
-			appCallback(error, null) ;		
-			return ;
-		}
-		
 		function lookupPlayer(callback) {
 			playerLookupByName(inpFirstname, inpLastname, function(err, data) {							
 		        if (err) {
@@ -171,33 +182,236 @@ module.exports = function(awsConfig) {
 		        	if (data.length > 0) {
 			        	callback(null, data[0]) ;		        		
 		        	} else {
-		    			var error = "ERROR:  Cannot find playerID for " + inpFirstname + " " + inpLastname  ;
+		    			console.error("Cannot find playerID for " + inpFirstname + " " + inpLastname) ;		        		
+		    			var error = "Cannot find player information.  Please try again." ;
 		    			callback(error, null) ;
 		        	}		        	
 		        }				
 			}) ;	 
 		}
 
-		function lookupHomeruns(inp, callback) {			
-			var pid = inp.playerID ;			
+		function statDataLookup(inp, callback) {		
+			
+			//  check if basic stat name is available;
+			var r = isBasicStatNameValid(basicStatName) ;
+	        if (!(r === true)) {
+				callback(r, null) ;
+				return ;
+	        } 			
+
+	        var fkey = kv[basicStatName] ;
+			var pid = inp.playerID ;
+			
 			dbutil.battingStatsByPlayerByYear(pid, inpYear, 25, function(err, data) {
 		        if (err) {
 		            console.error(err) ;
 		        } else {
 		        	callback(null, data.Items) ;
 		        }				
-			}) ;			
+			}) ;						
 		}
 		
 	    async.waterfall([ 
-	        lookupPlayer,
-	        lookupHomeruns,
+	    	dvCheck,
+	    	lookupPlayer,
+	    	statDataLookup,
 	        teamNameLookup
-	    ], function(error, result) {	    	
-	    	appCallback(error, result) ;	    	
+	    ], function(error, data) {	 
+	    	if (!error) {
+	    		
+	    		var fkey = kv[basicStatName] ;	    		
+	    		data.statKey = fkey ;
+	    		data.statName = sdef[fkey] ;
+	    		
+	    		if (data.length == 0) {
+	    			error = "I could not find " + data.statName + " data for " + inpFirstname + " " + inpLastname + " for " + inpYear+ ".  Please try again.";
+	    			data = null; 
+	    		}	    		
+	    		
+		    	appCallback(error, data) ;	    				    	
+	    	} else {	    		
+		    	appCallback(error, null) ;	    		
+	    	}	    	
+	    	
 	    }) ;   
+	},
+	
+	/*
+	 * Convert batting stats to 3 digits ;
+	 */
+	module.battingUtil = function(data, statKey) {
+
+		var xval = data[0][statKey] ;
+    	var y = ["BA", "SLG", "OBP", "OPS"];	    	    	
+    	if (y.indexOf(statKey) != -1) {
+    		xval = ((xval / data.length)/1000).toFixed(3) ;
+    	}
+    	return xval ;
+    	
+	}
+
+	/*
+	 * KV ;
+	 */
+	
+	/*
+	Batting Average (BA)
+	Run Batted In (RBI)
+	RBI
+	Slugging Percentage (SLG)
+	Slugging Average (SLG)
+	Stolen Base (SB)
+	Stolen Bases (SB)
+	OBP (OBP)
+	On base percentage (OBP)
+	OPS (OPS)
+	On base plus slugging (OPS)
+	Runs (R)
+	Runs Scored (R)
+	Home Runs (HR)
+	Dingers (HR)
+	Homers (HR)
+	Walks (BB)
+	*/
+	var kv = {
+			"batting average":"BA",
+			"run batted in":"RBI",
+			"runs batted in":"RBI",	        		
+			"rbi":"RBI",
+			"slugging percentage":"SLG",
+			"slugging average":"SLG",
+			"stolen base":"SB",
+			"stolen bases":"SB",
+			"obp":"OBP",
+			"on base percentage":"OBP",
+			"ops":"OPS",
+			"on base plus slugging":"OPS",
+			"runs":"R",
+			"runs scored":"R",
+			"home runs":"HR",
+			"homeruns":"HR",		
+			"dingers":"HR",
+			"homers":"HR",
+			"walks":"BB",
+			"walk":"BB",
+			"strikeout":"SO",
+			"strike out":"SO",
+			"strikeouts":"SO",
+			"strike outs":"SO",
+			"singles":"H",
+			"hits":"H",
+			"doubles":"2B",
+			"triples":"3B"
+	}
+
+	/*
+	*  Stats Key Names
+	*/
+	var sdef = {
+	"BA":"Batting Average",
+	"RBI":"Runs Batted In",
+	"SLG":"Slugging Percentage",
+	"SB":"Stolen Bases",
+	"OBP":"On Base Percentage",
+	"OPS":"On Base Plus Slugging",
+	"R":"Runs Scored",
+	"HR":"Home Runs",
+	"BB":"Walks",
+	"SO":"Strike Outs",
+	"H":"Singles",
+	"2B":"Doubles",
+	"3B":"Triples"
 	}
 	
+	/*
+	 * Check basic stat key values ;
+	 */
+	function isBasicStatNameValid(basicStatNameKey) {
+		
+        /*
+         * Test if key and values exists ;
+         */
+        if (!kv.hasOwnProperty(basicStatNameKey) || !kv[basicStatNameKey]) {
+        	console.error("Invalid request:  " + basicStatNameKey) ;
+        	return "No such stat name.  Please try again." ;
+        }
+        
+        return true ;        
+	}
+
+
+	/*
+	 * string to int test and converter ;
+	 */
+	function filterInt(value) {
+		if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
+			return Number(value);
+
+		return NaN;
+	}
+	
+	
+	/*
+	 * Single date validation ;
+	 */
+	function isDateValid(inpYear) {
+
+		//  Convert string to int ;
+		inpYear = filterInt(inpYear) ;
+
+		if (isNaN(inpYear)) {
+			console.error("Invalid Number:  " + inpYear) ;			
+			return "Invalid date.  Please try again with valid dates." ;
+		}
+
+		if (inpYear < minYear) {
+			console.error("Year Error:  " + inpYear) ;			
+			return "Basbeall did not exisit before " + inpYear + ".  Please say a year after "+ minYear ;
+		}
+		
+		if (inpYear > maxYear) {			
+			console.error("Year Error:  " + inpYear) ;			
+			return "Baseball will exist in the future.  For now, please say a year less than " + maxYear ;						
+		}
+		
+		return true ;		
+	}
+	
+	
+	/*
+	 * Date range data validation
+	 */
+	function isDateRangeValid(startYear, endYear) {
+		
+		//  Convert string to int ;
+		startYear = filterInt(startYear) ;
+		endYear = filterInt(endYear) ;
+		
+		var r1 = isDateValid(startYear) ;
+		var r2 = isDateValid(endYear) ;
+		
+		if (!(r1 === true))
+			return r1 ;
+		
+		if (!(r2 === true))
+			return r2 ;
+		
+		
+		//  minYear = 1871; maxYear = 2016 ;		
+		if (startYear > endYear) {
+			console.error("Year Error:  " + startYear + ", " + endYear) ;			
+			return "Invalid date.  Please try again with valid dates." ;
+		}
+		
+		//  Date range test.  Allow only max of 10 years to save on DynamoDB requests.
+		if ((endYear - startYear) > maxDateRange) {			
+			console.error("Max Year Error (" + maxDateRange +"):  " + startYear + ", " + endYear) ;
+			return "Date range cannot be greater than 10 years.  Please try again." ;						
+		}
+		
+		return true ;
+	}
+		
 	/*
 	 * function to lookup team name based on playerID and yearID 
 	 */
@@ -219,6 +433,14 @@ module.exports = function(awsConfig) {
 	    ) ;
 	}
 	
+	/*
+	 * Validate player firstname and lastname ;
+	 */
+	function isPlayerNameValid(inpFirstname, inpLastname) {
+		// PERSON NAME   ^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$
+
+		
+	}
 	
 	/*
 	 * Lookup playerID by first and last name
@@ -226,14 +448,16 @@ module.exports = function(awsConfig) {
 	function playerLookupByName(inpFirstname, inpLastname, callback) {
 		
 		if (!inpFirstname || !inpLastname) {
-			var error = "ERROR:  Please provide first and last name." ;
-			appCallback(error, null) ;		
+			console.error("Error:  missing first or last name") ;
+			
+			var error = "Please provide player name." ;
+			callback(error, null) ;		
 			return ;
-		}
-		
-		dbutil.playerLookupByName(inpFirstname, inpLastname, function(err, data) {
-			callback(err, data.Items) ;		    	
-		}) ;
+		} else {
+			dbutil.playerLookupByName(inpFirstname, inpLastname, function(err, data) {
+				callback(err, data.Items) ;		    	
+			}) ;
+		}		
 	}
 
 	
