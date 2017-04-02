@@ -1,6 +1,8 @@
 How many runs does Babe Ruth have
 How many runs did Babe Ruth have
 
+//-------------------------------
+
 What is Babe Ruth career runs
 What's Babe Ruth career runs
 tell me Babe Ruth career runs
@@ -35,6 +37,8 @@ get me runs for Babe Ruth
 find runs for Babe Ruth
 find me runs for Babe Ruth
 
+//-------------------------------------
+
  tell me Babe Ruth runs for 1927
  give Babe Ruth runs for 1927
  give me Babe Ruth runs for 1927
@@ -51,6 +55,8 @@ find me runs for Babe Ruth
  find runs for Babe Ruth for 1927
  find me runs for Babe Ruth for 1927
  How many runs Babe Ruth had in 1927
+
+//---------------------------------------
 
  What are the career stats for Babe Ruth
  tell me career stats for Babe Ruth
@@ -71,6 +77,8 @@ find me runs for Babe Ruth
  find Babe Ruth career stats
  find me Babe Ruth career stats
 
+//---------------------------------------
+
  Who had the most runs in 1971
  tell me runs leader from 1971
  give runs leader from 1971
@@ -80,6 +88,8 @@ find me runs for Babe Ruth
  find runs leader from 1971
  find me runs leader from 1971
  In 1971 who had the most runs
+
+//--------------------------------------
 
 who had the most runs between 1971 and 1979
 between 1971 and 1979 who had most runs

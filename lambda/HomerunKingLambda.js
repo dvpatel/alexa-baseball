@@ -169,7 +169,7 @@ var baseballHandlers =  {
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
 
-                    var result = "The "+ data.statName +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + data.statName + " in " + yearID ;
+                    var result = "The "+ data.statName +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He had " + xval + " " + data.statName + " in " + yearID ;
                     self.emit(':tell', result);		    	    
 	    		}			
 	    		
