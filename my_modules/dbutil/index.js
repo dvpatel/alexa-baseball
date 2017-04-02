@@ -108,7 +108,8 @@ module.playerLookupByName = function(firstName, lastName, callback) {
 	//  Get only first 2 chars of firstName ;	
 	var sfn = firstName ;
 	if (firstName) {
-		sfn = firstName.substring(0,2) ;				
+		//  sfn = firstName.substring(0,2) ;
+		sfn = firstName.substring(0,3) ;
 	}
 	
     var params = {
@@ -124,8 +125,12 @@ module.playerLookupByName = function(firstName, lastName, callback) {
         params.ExpressionAttributeValues = { ":ln":lastName } ;
     }
     
-    docClient.query(params, function(err, data) {    	
+    docClient.query(params, function(err, data) {
+    	
+    	//  sort by date:  birthYear;  Return the youngest player ;    	
+		data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;		
         callback(err, data) ;        
+        
     }) ;
 }
 
