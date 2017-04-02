@@ -9,22 +9,23 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-
 /*
  *  Lambda handler for homerunking
  */
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    alexa.appId = 'amzn1.ask.skill.bed251cd-36fa-4e36-bc51-5eb70eba67ee';
-    alexa.registerHandlers(handlers);
+    alexa.appId = 'amzn1.ask.skill.bed251cd-36fa-4e36-bc51-5eb70eba67ee';  
+    alexa.registerHandlers(baseballHandlers);
     alexa.execute();
 }
 
-var handlers =  { 
-	    'LaunchRequest': function () {
-	        this.emit('SayHello');
+var baseballHandlers =  { 
+	    /*  Must support:  LaunchRequest, IntentRequest, and SessionEndedRequest" */		
+		
+		'LaunchRequest': function () {
+    		this.emit(':tell', "Hi there.  To get started with sports nation skill, ask to get your favorite baseball stats.  For example, ask Who had the most home runs in 1989?");
 	    },
-
+	    
 	    /*  
 	     *  Specific stat for given player:  BA, RBI, SLG, SB, OBP, OPS, R, HR 
 	     */
@@ -106,8 +107,8 @@ var handlers =  {
     	    		tba = ((tba / data.length)/1000).toFixed(3) ;
     	    		tops = ((tops / data.length)/1000).toFixed(3) ;
 	    	    	
-	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	
-    	    		self.emit(':tell', result);
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	    	    		
+	    	    	self.emit(':tell', result);
 
 	    	    }
 	    	    
@@ -138,7 +139,8 @@ var handlers =  {
 	    	    	var teamName = data[0].name ;
 
 	                var result = fullName + " had the most " + data.statName + " at " + xval + " in " + yearID ;
-		    	    self.emit(':tell', result);		    	    
+		    	    self.emit(':tell', result);
+		    	    
 	    		}				    		
 	    	}) ;	        
 	    },
@@ -168,7 +170,7 @@ var handlers =  {
 	    	    	var teamName = data[0].name ;
 
                     var result = "The "+ data.statName +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He hit " + xval + " " + data.statName + " in " + yearID ;
-		    	    self.emit(':tell', result);		    	    
+                    self.emit(':tell', result);		    	    
 	    		}			
 	    		
 	    	}) ;	    			        
@@ -205,15 +207,28 @@ var handlers =  {
 
 	    	    		var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
 	    	    		
-	    	    		self.emit(':tell', results[rindx]);	    	    		
+	    	    		var result = results[rindx] ;
+	    	    		self.emit(':tell', result);	    	    		
 	    	    	}	    	    		    	    	
 	    	    }
 	    	}) ;	        
 	    },
-	    
+	    	    
 	    'AMAZON.HelpIntent': function() {
 	        this.emit(':tell', ' Ask sports nation to get you stats for your favorite sport player.  ' +  
 	        		'Try asking sports nation for Babe Ruth career stats.');
+	    },
+	    
+	    'SessionEndedRequest': function() {
+    		this.emit(':tell', "Ok.  Bye!");    		
+	    },
+	    
+	    'AMAZON.StopIntent': function() {
+	    	this.emit(':tell', 'Bye, Bye.') ;
+	    },
+	    
+	    'AMAZON.CancelIntent': function() {
+	    	this.emit(':tell', 'Bye.') ;
 	    },
 	    
 	    'Unhandled': function() {
