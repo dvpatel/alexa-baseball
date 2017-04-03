@@ -79,8 +79,8 @@ StatsKingForYearIntent get {basicStatName} leader from {givenYear}
 StatsKingForYearIntent get me {basicStatName} leader from {givenYear}
 StatsKingForYearIntent find {basicStatName} leader from {givenYear}
 StatsKingForYearIntent find me {basicStatName} leader from {givenYear}
-StatsKingForYearIntent In {givenYear} who had the most {basicStatName}
-StatsKingForYearIntent In {givenYear} who was the {basicStatName} leader
+StatsKingForYearIntent {givenYear} who had the most {basicStatName}
+StatsKingForYearIntent {givenYear} who was the {basicStatName} leader
 
 StatsKingForYearRangeIntent who had the most {basicStatName} between {startYear} and {endYear}
 StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStatName}

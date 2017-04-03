@@ -153,7 +153,7 @@ module.playerLookupByName = function(firstName, lastName, callback) {
     
     docClient.query(params, function(err, data) {    	
     	//  sort by date:  birthYear;  Return the youngest player ;    	
-		data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;    	
+		data.Items.sort(function(a,b) { return a["birthYear"] - b["birthYear"] ; } ) ;    	
         callback(err, data) ;                
     }) ;
 }
@@ -179,7 +179,7 @@ module.playerLookupByNameLocal = function(firstName, lastName, callback) {
     }
     
 	//  sort by date:  birthYear;  Return the oldest player ;    	
-	data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;    	
+	data.Items.sort(function(a,b) { return a["birthYear"] - b["birthYear"] ; } ) ;    	
     callback(null, data) ;    
 }
 
