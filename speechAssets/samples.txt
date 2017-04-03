@@ -88,6 +88,7 @@ find me runs for Babe Ruth
  find runs leader from 1971
  find me runs leader from 1971
  In 1971 who had the most runs
+ In 1971 who was the runs leader
 
 //--------------------------------------
 

@@ -31,11 +31,13 @@ console.log(startYear + ", " + endYear + ", " + fkey) ;
 			console.error(err) ;
 		} else {
 
+			//console.log(data) ;
+
 	    		var xval = apputil.battingUtil(data, data.statKey) ;
 	    	    	var fullName = data[0].fullName ;
 	    	    	var yearID = data[0].yearID ;
 	    	    	var teamName = data[0].name ;
-	                var result = fullName + " had the most " + data.statName + " at " + xval + " in " + yearID ;
+	                var result = fullName + " had the most " + data.statName + " at " + xval + " in " + yearID + ".  He was playing for " + teamName;
 	    		console.log(result) ;
 		}
 

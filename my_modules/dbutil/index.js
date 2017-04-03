@@ -1,6 +1,14 @@
 var fs = require('fs');
 var AWS = require('aws-sdk');
 
+/* 
+ * location players using fuzzy search using Fuse and local players DB ;
+ */
+var Fuse = require('fuse.js') ;
+var players = require('./Players.json') ;
+
+//========================================
+
 module.exports = function(awsConfig) {
 
 AWS.config.update(awsConfig) ;
@@ -99,17 +107,35 @@ module.playerLookup = function(playerID, callback) {
     });
 }
 
+module.playerLookupLocal = function(playerID, callback) {
+	
+	/*
+	 * Mull be a 100 percent match to playerID.  threshold = 0.0
+	 */
+	var pidOptions = 
+		{ shouldSort: true, threshold: 0.0, maxPatternLength: 32, minMatchCharLength: 1, keys: [ "playerID" ] };
+	var fusePID = new Fuse(players, pidOptions) ;
+			
+	var data = {} ;
+	data.Item = fusePID.search(playerID)[0] ;
+	if (data.Item) {		
+	    data.Item["fullName"] = data.Item.firstName + " " + data.Item.lastName ;
+        callback(null, data) ;
+	} else {
+        console.log("Error!.") ;
+        callback("Error with player lookup.") ;		
+	}	
+}
+
 
 /*
  * Lookup player by last name and first 2 letters of first name
  */
 module.playerLookupByName = function(firstName, lastName, callback) {
-
 	//  Get only first 2 chars of firstName ;	
 	var sfn = firstName ;
 	if (firstName) {
-		//  sfn = firstName.substring(0,2) ;
-		sfn = firstName.substring(0,3) ;
+		sfn = firstName.substring(0,1) ;
 	}
 	
     var params = {
@@ -125,13 +151,36 @@ module.playerLookupByName = function(firstName, lastName, callback) {
         params.ExpressionAttributeValues = { ":ln":lastName } ;
     }
     
-    docClient.query(params, function(err, data) {
-    	
+    docClient.query(params, function(err, data) {    	
     	//  sort by date:  birthYear;  Return the youngest player ;    	
-		data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;		
-        callback(err, data) ;        
-        
+		data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;    	
+        callback(err, data) ;                
     }) ;
+}
+
+/*
+ * Locate player using local JSON and fuzzy search ;
+ */
+module.playerLookupByNameLocal = function(firstName, lastName, callback) {
+
+	var lastnameOptions = 
+		{ shouldSort: true, threshold: 0.2, location: 0, distance: 100, maxPatternLength: 32, minMatchCharLength: 1, keys: [ "lastName" ] };
+	var fuseLastname = new Fuse(players, lastnameOptions) ;
+	var lnResult = fuseLastname.search(lastName);
+	
+	var data = {} ;
+    if (firstName && lastName) {
+    	var firstnameOptions = 
+			{ shouldSort: true, threshold: 0.2, location: 0, distance: 100, maxPatternLength: 32, minMatchCharLength: 1, keys: [ "firstName" ] };
+    	var fuseLastname = new Fuse(lnResult, firstnameOptions) ;
+    	data.Items = fuseLastname.search(firstName);
+    } else if (!firstName && lastName) { 
+    	data.Items = lnResult  ;    	
+    }
+    
+	//  sort by date:  birthYear;  Return the oldest player ;    	
+	data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;    	
+    callback(null, data) ;    
 }
 
 /*

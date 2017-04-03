@@ -18,7 +18,7 @@ var inpYear = (process.argv[4] || 1961)-0 ;
 
 (function() {	
 
-	apputil.battingStatsByYearByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), inpYear, function(err, data) {
+	apputil.battingStatsByYearByPlayer(inpFirstname.toLowerCase(), inpLastname.toLowerCase(), inpYear, "home runs", function(err, data) {
 	    if (err) {
 	        console.error(err) ;
 	    } else {	    	

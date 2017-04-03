@@ -36,9 +36,7 @@ var inpYear = apputil.getNumber(slot, "playerYear") ;
 	    if (err) {
 	        console.error(err) ;
 	    } else {	    	
-	    	
-	    	console.log("Length:  " + data.length) ;
-	    	
+
 	    	for (var i = 0; i < data.length; i++) {
 	    		var r = data[i] ;	    	    	
 	    	    var team = r.name ;	    	    		

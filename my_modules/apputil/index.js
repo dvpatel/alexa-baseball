@@ -228,7 +228,11 @@ module.exports = function(awsConfig) {
 		            console.error(err) ;
 		        } else {		        	
 		        	if (data.length > 0) {
-			        	callback(null, data[0]) ;		        		
+		        		
+		        		//  2 pete roses ;  which one to pick?		        		
+			        	//callback(null, data[0]) ;
+		        		callback(null, data) ;
+			        	
 		        	} else {
 		    			console.error("Cannot find playerID for " + inpFirstname + " " + inpLastname) ;		        		
 		    			var error = "Cannot find player information.  Please try again." ;
@@ -246,26 +250,39 @@ module.exports = function(awsConfig) {
 				callback(r, null) ;
 				return ;
 	        } 			
-
+	        
 	        var fkey = kv[basicStatName] ;
-			var pid = inp.playerID ;
+	        
+		    var results = [] ;
+		    async.eachSeries(inp, function(d, cb) {
 
-			var cacheKey = "batting." + pid + "." + inpYear ;
-			var cacheData = getCache(cacheKey) ;	
-			if (cacheData) {
-				console.log("Found cache data for " + cacheKey) ;
-				callback(null, cacheData) ;
-			} else {
-				dbutil.battingStatsByPlayerByYear(pid, inpYear, 25, function(err, data) {
-			        if (err) {
-			            console.error(err) ;
-			        } else {			        	
-			        	console.log("Adding to cache:  " + cacheKey) ;
-			        	cacheObject(cacheKey, data.Items) ;
-			        	callback(null, data.Items) ;
-			        }				
-				}) ;						
-			}			
+		    	var pid = d.playerID ;					    	
+				var cacheKey = "batting." + pid + "." + inpYear ;
+				var cacheData = getCache(cacheKey) ;	
+				if (cacheData) {
+					console.log("Found cache data for " + cacheKey) ;
+            		results.push(cacheData) ;		                		
+            		cb() ;
+				} else {					
+					
+					dbutil.battingStatsByPlayerByYear(pid, inpYear, 25, function(err, data) {
+				        if (err) {
+				            console.error(err) ;
+				        } else {				        	
+				        	//  Found my result ;
+				        	if (data.Items.length > 0) {				        		
+					        	console.log("Adding to cache:  " + cacheKey) ;				        	
+					        	cacheObject(cacheKey, data.Items[0]) ;				        		
+		                		results.push(data.Items[0]) ;		                		
+				        	}
+				        }
+				        
+			        	cb() ;					        	
+					}) ;											
+				}								
+		    }, function(err) {
+		    	callback(null, results) ;
+		    }) ;
 		}
 		
 	    async.waterfall([ 
@@ -275,7 +292,7 @@ module.exports = function(awsConfig) {
 	        teamNameLookup
 	    ], function(error, data) {	 
 	    	if (!error) {
-	    		
+	    			    		
 	    		var fkey = kv[basicStatName] ;	    		
 	    		data.statKey = fkey ;
 	    		data.statName = sdef[fkey] ;
@@ -355,6 +372,7 @@ module.exports = function(awsConfig) {
 	*/
 	var kv = {
 			"batting average":"BA",
+			"batting":"BA",
 			"run batted in":"RBI",
 			"runs batted in":"RBI",	        		
 			"rbi":"RBI",
@@ -544,6 +562,16 @@ module.exports = function(awsConfig) {
 			callback(error, null) ;		
 			return ;
 		} else {
+
+			/*
+			 * No need to cache 
+			 */
+			
+			dbutil.playerLookupByNameLocal(inpFirstname, inpLastname, function(err, data) {	
+				callback(null, data.Items) ;														
+			}) ;
+						
+			/*
 			var key = "player."+inpFirstname+"."+inpLastname ;
 			var cacheData = getCache(key) ;
 			if (cacheData) {				
@@ -559,7 +587,8 @@ module.exports = function(awsConfig) {
 					
 					callback(err, data.Items) ;									
 				}) ;
-			}			
+			}*/
+			
 		}		
 	}
 
@@ -571,6 +600,21 @@ module.exports = function(awsConfig) {
 
 	    async.each(results,
 	        function(item, cb) {
+
+            	dbutil.playerLookupLocal(item.playerID, function(err, data) {
+            		
+            		//console.log(data) ;
+            		
+            		if (err) {
+            			console.error(err) ;
+            		} else {
+            			item.fullName = data.Item.fullName ;
+            		}
+            		cb() ;               
+            	}) ;
+	    	
+	
+	    		/*
 	            dbutil.playerLookup(item.playerID, function(err, data) {
 	                if (err) {
 	                    console.error(err) ;
@@ -579,6 +623,8 @@ module.exports = function(awsConfig) {
 	                }
 	                cb() ;               
 	            }) ;
+	            */
+	    	
 	        }, function(err) {
 	            callback(null, results) ;
 	        }
