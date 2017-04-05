@@ -379,7 +379,9 @@ module.exports = function(awsConfig) {
 			"slugging percentage":"SLG",
 			"slugging average":"SLG",
 			"stolen base":"SB",
+			"stolenbase":"SB",			
 			"stolen bases":"SB",
+			"stolenbases":"SB",			
 			"obp":"OBP",
 			"on base percentage":"OBP",
 			"ops":"OPS",
@@ -563,14 +565,22 @@ module.exports = function(awsConfig) {
 			return ;
 		} else {
 
-			/*
-			 * No need to cache 
-			 */
-			
-			dbutil.playerLookupByNameLocal(inpFirstname, inpLastname, function(err, data) {	
-				callback(null, data.Items) ;														
-			}) ;
-						
+			var key = "player."+inpFirstname+"."+inpLastname ;
+			var cacheData = getCache(key) ;
+			if (cacheData) {				
+				console.log("Found data in cache for key: " + key) ;
+				callback(null, cacheData) ;				
+			} else {
+				dbutil.playerLookupByNameLocal(inpFirstname, inpLastname, function(err, data) {						
+					if (!err) {
+						console.log("Adding to cache:  " + key) ;					
+						cacheObject(key, data.Items) ;										
+					}
+					
+					callback(null, data.Items) ;														
+				}) ;
+			}						
+				
 			/*
 			var key = "player."+inpFirstname+"."+inpLastname ;
 			var cacheData = getCache(key) ;
