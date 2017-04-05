@@ -178,8 +178,8 @@ module.playerLookupByNameLocal = function(firstName, lastName, callback) {
     	data.Items = lnResult  ;    	
     }
     
-	//  sort by date:  birthYear;  Return the oldest player ;    	
-	data.Items.sort(function(a,b) { return a["birthYear"] - b["birthYear"] ; } ) ;    	
+	//  sort by date:  birthYear;  Return the younger player ;    	
+	data.Items.sort(function(a,b) { return b["birthYear"] - a["birthYear"] ; } ) ;    	
     callback(null, data) ;    
 }
 

@@ -62,7 +62,7 @@ var baseballHandlers =  {
 	    	    		}	    	    		
 	    	    	}
 
-    	    		var result = inpFirstname + " " + inpLastname + " career " + data.statName + " is " + t ;
+    	    		var result = inpFirstname + " " + inpLastname + " career " + data.statName + " is " + t + "." ;
     	    		self.emit(':tell', result);
 	    	    }
 	    	    
@@ -107,7 +107,7 @@ var baseballHandlers =  {
     	    		tba = ((tba / data.length)/1000).toFixed(3) ;
     	    		tops = ((tops / data.length)/1000).toFixed(3) ;
 	    	    	
-	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + " : " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	    	    		
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + ": " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	    	    		
 	    	    	self.emit(':tell', result);
 
 	    	    }
@@ -232,6 +232,6 @@ var baseballHandlers =  {
 	    },
 	    
 	    'Unhandled': function() {
-	        this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989');
+	        this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989?');
 	    }
 };
