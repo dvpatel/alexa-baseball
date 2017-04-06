@@ -43,13 +43,29 @@ PlayerBasicStatByYearIntent get me {firstName} {lastName} {basicStatName} for {p
 PlayerBasicStatByYearIntent find {firstName} {lastName} {basicStatName} for {playerYear}
 PlayerBasicStatByYearIntent find me {firstName} {lastName} {basicStatName} for {playerYear}
 
-PlayerBasicStatByYearIntent tell me {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent give {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent give me {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent get {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent get me {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent find {basicStatName} for {firstName} {lastName} for {playerYear}
-PlayerBasicStatByYearIntent find me {basicStatName} for {firstName} {lastName} for {playerYear}
+PlayerBasicStatByYearIntent tell me {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent give {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent give me {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent get {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent get me {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent find {firstName} {lastName} {basicStatName} from {playerYear}
+PlayerBasicStatByYearIntent find me {firstName} {lastName} {basicStatName} from {playerYear}
+
+PlayerBasicStatByYearIntent tell me {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent give {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent give me {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent get {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent get me {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent find {firstName} {lastName} {playerYear} {basicStatName}
+PlayerBasicStatByYearIntent find me {firstName} {lastName} {playerYear} {basicStatName}
+
+PlayerBasicStatByYearIntent tell me {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent give {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent give me {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent get {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent get me {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent find {basicStatName} for {firstName} {lastName} from {playerYear}
+PlayerBasicStatByYearIntent find me {basicStatName} for {firstName} {lastName} from {playerYear}
 PlayerBasicStatByYearIntent How many {basicStatName} {firstName} {lastName} had in {playerYear}
 
 PlayerCareerStatsIntent What are the career stats for {firstName} {lastName}
@@ -82,6 +98,10 @@ StatsKingForYearIntent find me {basicStatName} leader from {givenYear}
 StatsKingForYearIntent {givenYear} who had the most {basicStatName}
 StatsKingForYearIntent {givenYear} who was the {basicStatName} leader
 
+StatsKingForYearRangeIntent who was the {basicStatName} champion between {startYear} and {endYear}
+StatsKingForYearRangeIntent who was the {basicStatName} leader between {startYear} and {endYear}
+StatsKingForYearRangeIntent who was the {basicStatName} champion from {startYear} to {endYear}
+StatsKingForYearRangeIntent who was the {basicStatName} leader from {startYear} to {endYear}
 StatsKingForYearRangeIntent who had the most {basicStatName} between {startYear} and {endYear}
-StatsKingForYearRangeIntent between {startYear} and {endYear} who had most {basicStatName}
-StatsKingForYearRangeIntent between {startYear} and {endYear} who was {basicStatName} champion
+StatsKingForYearRangeIntent {startYear} and {endYear} who had most {basicStatName}
+StatsKingForYearRangeIntent {startYear} and {endYear} who was {basicStatName} champion

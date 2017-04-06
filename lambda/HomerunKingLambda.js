@@ -9,6 +9,13 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
+
+var APP_STATES = {
+	    PLAY: "_PLAY",   // Asking stat questions
+	    START: "_START", // Entry point, start the game.
+	    HELP: "_HELP"    // The user is asking for help.
+	};
+
 /*
  *  Lambda handler for homerunking
  */
@@ -19,11 +26,18 @@ exports.handler = function(event, context, callback) {
     alexa.execute();
 }
 
-var baseballHandlers =  { 
+
+var baseballHandlers = { 
 	    /*  Must support:  LaunchRequest, IntentRequest, and SessionEndedRequest" */		
 		
 		'LaunchRequest': function () {
-    		this.emit(':tell', "Hi there.  To get started with sports nation skill, ask to get your favorite baseball stats.  For example, ask Who had the most home runs in 1989?");
+			
+            var result = "Welcome to sports nation. You can ask a question like, what\'s babe ruth career home runs?...  What stat can I get you?" ;
+
+            this.attributes['result'] = result ;
+            this.attributes['resultReplay'] = result ;
+
+            this.emit(':ask', result) ;            
 	    },
 	    
 	    /*  
@@ -41,7 +55,7 @@ var baseballHandlers =  {
 	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, basicStatName, function(err, data) {
 	    	    if (err) {
 	    	        console.error("PlayerSpecificCareerStatsIntent Error:  " + err) ;
-    	    		self.emit(':tell', err);
+    	    		self.emit(':ask', err);
 	    	    } else {	    	
 
 	    	    	//  BA, RBI, SB, R, HR, etc. ==>  add them together
@@ -63,7 +77,11 @@ var baseballHandlers =  {
 	    	    	}
 
     	    		var result = inpFirstname + " " + inpLastname + " career " + data.statName + " is " + t + "." ;
-    	    		self.emit(':tell', result);
+    	    		
+    	            self.attributes['result'] = result ;
+    	            self.attributes['resultReplay'] = result ;
+
+    	    		self.emit(':tell', result, result);
 	    	    }
 	    	    
 	    	})	        
@@ -85,7 +103,7 @@ var baseballHandlers =  {
 	    	apputil.battingStatsByPlayer(inpFirstname, inpLastname, null, function(err, data) {
 	    	    if (err) {
 	    	        console.error("PlayerCareerStatsIntent Error:  " + err) ;
-    	    		self.emit(':tell', err);
+    	    		self.emit(':ask', err);
 	    	    } else {	    	
 
 	    	    	var thr = 0 ;  // total home runs ;
@@ -107,8 +125,13 @@ var baseballHandlers =  {
     	    		tba = ((tba / data.length)/1000).toFixed(3) ;
     	    		tops = ((tops / data.length)/1000).toFixed(3) ;
 	    	    	
-	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + ": " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;	    	    	    	    		
-	    	    	self.emit(':tell', result);
+	    	    	var result = "Here are the career stats for " + inpFirstname + " " + inpLastname + ": " + "total home runs " + thr + ", total batting average " + tba + ", total R.B.I. was " + trbi + " and total O.P.S. was " + tops ;
+	    	    	
+	                self.attributes['result'] = result ;
+	                self.attributes['resultReplay'] = result ;
+
+
+	    	    	self.emit(':tell', result, result);
 
 	    	    }
 	    	    
@@ -131,7 +154,7 @@ var baseballHandlers =  {
 	    	apputil.maxStatByYears(startYear, endYear, basicStatName, function(err, data) {			    		
 	    		if (err) {	    			
 	    		    console.error("Error:  " + err) ;	    		    
-	    		    self.emit(':tell', err) ;	    		    
+	    		    self.emit(':ask', err) ;	    		    
 	    		} else {	    			
                     var xval = apputil.battingUtil(data, data.statKey) ;
 	    	    	var fullName = data[0].fullName ;
@@ -139,7 +162,11 @@ var baseballHandlers =  {
 	    	    	var teamName = data[0].name ;
 
 	                var result = fullName + " had the most " + data.statName + " at " + xval + " in " + yearID ;
-		    	    self.emit(':tell', result);
+	                
+	                self.attributes['result'] = result ;
+	                self.attributes['resultReplay'] = result ;
+
+		    	    self.emit(':tell', result, result);
 		    	    
 	    		}				    		
 	    	}) ;	        
@@ -161,7 +188,7 @@ var baseballHandlers =  {
 	    		
 	    		if (err) {
 	    		    console.error("Error:  " + err) ;
-	    		    self.emit(':tell', err) ;	    		    
+	    		    self.emit(':ask', err) ;	    		    
 	    		} else {
 
                     var xval = apputil.battingUtil(data, data.statKey) ;
@@ -170,7 +197,12 @@ var baseballHandlers =  {
 	    	    	var teamName = data[0].name ;
 
                     var result = "The "+ data.statName +" leader between " + startYear + " and " + endYear + " was " + fullName + ".  He had " + xval + " " + data.statName + " in " + yearID ;
-                    self.emit(':tell', result);		    	    
+                    
+                    self.attributes['result'] = result ;
+                    self.attributes['resultReplay'] = result ;
+
+
+                    self.emit(':tell', result, result);		    	    
 	    		}			
 	    		
 	    	}) ;	    			        
@@ -193,7 +225,7 @@ var baseballHandlers =  {
 	    	    if (err) {
 	    	    	
 	    		    console.error("Error:  " + err) ;	    		    
-	    		    self.emit(':tell', err) ;	    		    
+	    		    self.emit(':ask', err) ;	    		    
 	    	    	
 	    	    } else {	    		    	    	
 	    	    	for (var i = 0; i < data.length; i++) {
@@ -208,30 +240,50 @@ var baseballHandlers =  {
 	    	    		var rindx = Math.floor(Math.random() * 3) + 0 ;	    	    		
 	    	    		
 	    	    		var result = results[rindx] ;
-	    	    		self.emit(':tell', result);	    	    		
+	    	    		
+	    	            self.attributes['result'] = result ;
+	    	            self.attributes['resultReplay'] = result ;
+
+	    	    		self.emit(':tell', result, result);	    	    		
 	    	    	}	    	    		    	    	
 	    	    }
 	    	}) ;	        
 	    },
 	    	    
 	    'AMAZON.HelpIntent': function() {
-	        this.emit(':tell', ' Ask sports nation to get you stats for your favorite sport player.  ' +  
+	        this.emit(':ask', ' Ask sports nation to get you stats for your favorite sport player.  ' +  
 	        		'Try asking sports nation for Babe Ruth career stats.');
 	    },
 	    
+	    /*  Disable repeat for now.
+	    'AMAZON.RepeatIntent': function () {
+	    	
+	    	var result = "Repeating.  " + this.attributes['result'] ;
+	    	var resultReplay = "Repeating again."  + this.attributes['resultReplay'] ;
+	    	
+	        this.emit(':ask', result, resultReplay) ;
+	        
+	    },*/
+	    
 	    'SessionEndedRequest': function() {
-    		this.emit(':tell', "Ok.  Bye!");    		
+    		this.emit(':tell', "Ok.  See ya!");    		
 	    },
 	    
 	    'AMAZON.StopIntent': function() {
-	    	this.emit(':tell', 'Bye, Bye.') ;
+	    	this.emit(':tell', 'Ok.  Please come back again to FAN sports nation.') ;
 	    },
 	    
 	    'AMAZON.CancelIntent': function() {
-	    	this.emit(':tell', 'Bye.') ;
+	    	this.emit(':tell', 'Ok.  Thank you!  Come again!') ;
 	    },
 	    
 	    'Unhandled': function() {
-	        this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989?');
+	        //  this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989?');
+	    	
+	    	var result = "Sorry, I did not understand. You can ask something like, Who was the home run king for 1989?"; 
+	        this.attributes['result'] = result ;
+	        this.attributes['resultReplay'] = result ;
+	        this.emit(':ask', result, result) ;
+	    	
 	    }
 };

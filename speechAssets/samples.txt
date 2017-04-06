@@ -1,96 +1,126 @@
-How many runs does Babe Ruth have
-How many runs did Babe Ruth have
+How many runs does babe ruth have
+How many runs did babe ruth have
 
 //-------------------------------
 
-What is Babe Ruth career runs
-What's Babe Ruth career runs
-tell me Babe Ruth career runs
-give Babe Ruth career runs
-give me Babe Ruth career runs
-get Babe Ruth career runs
-get me Babe Ruth career runs
-find Babe Ruth career runs
-find me Babe Ruth career runs
+What is babe ruth career runs
+What's babe ruth career runs
+tell me babe ruth career runs
+give babe ruth career runs
+give me babe ruth career runs
+get babe ruth career runs
+get me babe ruth career runs
+find babe ruth career runs
+find me babe ruth career runs
 
-tell me career runs for Babe Ruth
-give career runs for Babe Ruth
-give me career runs for Babe Ruth
-get career runs for Babe Ruth
-get me career runs for Babe Ruth
-find career runs for Babe Ruth
-find me career runs for Babe Ruth
+tell me career runs for babe ruth
+give career runs for babe ruth
+give me career runs for babe ruth
+get career runs for babe ruth
+get me career runs for babe ruth
+find career runs for babe ruth
+find me career runs for babe ruth
 
-tell me Babe Ruth runs
-give Babe Ruth runs
-give me Babe Ruth runs
-get Babe Ruth runs
-get me Babe Ruth runs
-find Babe Ruth runs
-find me Babe Ruth runs
+tell me babe ruth runs
+give babe ruth runs
+give me babe ruth runs
+get babe ruth runs
+get me babe ruth runs
+find babe ruth runs
+find me babe ruth runs
 
-tell me runs for Babe Ruth
-give runs for Babe Ruth
-give me runs for Babe Ruth
-get runs for Babe Ruth
-get me runs for Babe Ruth
-find runs for Babe Ruth
-find me runs for Babe Ruth
+tell me runs for babe ruth
+give runs for babe ruth
+give me runs for babe ruth
+get runs for babe ruth
+get me runs for babe ruth
+find runs for babe ruth
+find me runs for babe ruth
 
 //-------------------------------------
 
- tell me Babe Ruth runs for 1927
- give Babe Ruth runs for 1927
- give me Babe Ruth runs for 1927
- get Babe Ruth runs for 1927
- get me Babe Ruth runs for 1927
- find Babe Ruth runs for 1927
- find me Babe Ruth runs for 1927
+ tell me babe ruth nineteen twenty seven homeruns
+ give babe ruth nineteen twenty seven homeruns
+ give me babe ruth nineteen twenty seven homeruns
+ get babe ruth nineteen twenty seven homeruns
+ get me babe ruth nineteen twenty seven homeruns
+ find babe ruth nineteen twenty seven homeruns
+ find me babe ruth nineteen twenty seven homeruns
 
- tell me runs for Babe Ruth for 1927
- give runs for Babe Ruth for 1927
- give me runs for Babe Ruth for 1927
- get runs for Babe Ruth for 1927
- get me runs for Babe Ruth for 1927
- find runs for Babe Ruth for 1927
- find me runs for Babe Ruth for 1927
- How many runs Babe Ruth had in 1927
+
+ tell me babe ruth runs for nineteen twenty seven
+ give babe ruth runs for nineteen twenty seven
+ give me babe ruth runs for nineteen twenty seven
+ get babe ruth runs for nineteen twenty seven
+ get me babe ruth runs for nineteen twenty seven
+ find babe ruth runs for nineteen twenty seven
+ find me babe ruth runs for nineteen twenty seven
+
+tell me babe ruth runs from nineteen twenty seven
+give babe ruth runs from nineteen twenty seven
+give me babe ruth runs from nineteen twenty seven
+get babe ruth runs from nineteen twenty seven
+get me babe ruth runs from nineteen twenty seven
+find babe ruth runs from nineteen twenty seven
+find me babe ruth runs from nineteen twenty seven
+
+tell me babe ruth nineteen twenty seven homeruns
+give babe ruth nineteen twenty seven homeruns
+give me babe ruth nineteen twenty seven homeruns
+get babe ruth nineteen twenty seven homeruns
+get me babe ruth nineteen twenty seven homeruns
+find babe ruth nineteen twenty seven homeruns
+find me babe ruth nineteen twenty seven homeruns
+
+ tell me runs for babe ruth for nineteen twenty seven
+ give runs for babe ruth for nineteen twenty seven
+ give me runs for babe ruth for nineteen twenty seven
+ get runs for babe ruth for nineteen twenty seven
+ get me runs for babe ruth for nineteen twenty seven
+ find runs for babe ruth for nineteen twenty seven
+ find me runs for babe ruth for nineteen twenty seven
+ How many runs babe ruth had in nineteen twenty seven
 
 //---------------------------------------
 
- What are the career stats for Babe Ruth
- tell me career stats for Babe Ruth
- give career stats for Babe Ruth
- give me career stats for Babe Ruth
- get career stats for Babe Ruth
- get me career stats for Babe Ruth
- find career stats for Babe Ruth
- find me career stats for Babe Ruth
+ What are the career stats for babe ruth
+ tell me career stats for babe ruth
+ give career stats for babe ruth
+ give me career stats for babe ruth
+ get career stats for babe ruth
+ get me career stats for babe ruth
+ find career stats for babe ruth
+ find me career stats for babe ruth
 
- What is Babe Ruth career stats
- What's Babe Ruth career stats
- tell me Babe Ruth career stats
- give Babe Ruth career stats
- give me Babe Ruth career stats
- get Babe Ruth career stats
- get me Babe Ruth career stats
- find Babe Ruth career stats
- find me Babe Ruth career stats
+ What is babe ruth career stats
+ What's babe ruth career stats
+ tell me babe ruth career stats
+ give babe ruth career stats
+ give me babe ruth career stats
+ get babe ruth career stats
+ get me babe ruth career stats
+ find babe ruth career stats
+ find me babe ruth career stats
 
 //---------------------------------------
 
- Who had the most runs in 1971
- tell me runs leader from 1971
- give runs leader from 1971
- give me runs leader from 1971
- get runs leader from 1971
- get me runs leader from 1971
- find runs leader from 1971
- find me runs leader from 1971
- In 1971 who had the most runs
- In 1971 who was the runs leader
+ Who had the most runs in nineteen seventy one
+ tell me runs leader from nineteen seventy one
+ give runs leader from nineteen seventy one
+ give me runs leader from nineteen seventy one
+ get runs leader from nineteen seventy one
+ get me runs leader from nineteen seventy one
+ find runs leader from nineteen seventy one
+ find me runs leader from nineteen seventy one
+ In nineteen seventy one who had the most runs
+ In nineteen seventy one who was the runs leader
 
 //--------------------------------------
 
-who had the most runs between 1971 and 1979
-between 1971 and 1979 who had most runs
+who was the runs champion between nineteen seventy one and nineteen seventy nine 
+who was the runs leader between nineteen seventy one and nineteen seventy nine 
+who was the runs champion from nineteen seventy one to nineteen seventy nine 
+who was the runs leader from nineteen seventy one to nineteen seventy nine 
+who had the most runs between nineteen seventy one and nineteen seventy nine 
+nineteen seventy one and nineteen seventy nine who had most runs
+nineteen seventy one and nineteen seventy nine who was runs champion
