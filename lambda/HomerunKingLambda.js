@@ -9,13 +9,6 @@ var awsConfig = nconf.get('aws-config') ;
 var apputilmod = require('apputil') ;
 var apputil = apputilmod(awsConfig) ;
 
-
-var APP_STATES = {
-	    PLAY: "_PLAY",   // Asking stat questions
-	    START: "_START", // Entry point, start the game.
-	    HELP: "_HELP"    // The user is asking for help.
-	};
-
 /*
  *  Lambda handler for homerunking
  */
@@ -25,7 +18,6 @@ exports.handler = function(event, context, callback) {
     alexa.registerHandlers(baseballHandlers);
     alexa.execute();
 }
-
 
 var baseballHandlers = { 
 	    /*  Must support:  LaunchRequest, IntentRequest, and SessionEndedRequest" */		
