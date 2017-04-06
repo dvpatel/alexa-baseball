@@ -2,3 +2,4 @@
 **/node_modules
 **/homerunking.zip
 /db/data/json/**
+/lambda/appid.txt

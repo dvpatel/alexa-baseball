@@ -21,7 +21,7 @@ var APP_STATES = {
  */
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    alexa.appId = 'amzn1.ask.skill.bed251cd-36fa-4e36-bc51-5eb70eba67ee';  
+    alexa.appId = process.env.ALEXA_APP_ID;  
     alexa.registerHandlers(baseballHandlers);
     alexa.execute();
 }
@@ -278,8 +278,6 @@ var baseballHandlers = {
 	    },
 	    
 	    'Unhandled': function() {
-	        //  this.emit(':ask', 'Sorry, I did not understand. Try asking something like, Who was the home run king for 1989?');
-	    	
 	    	var result = "Sorry, I did not understand. You can ask something like, Who was the home run king for 1989?"; 
 	        this.attributes['result'] = result ;
 	        this.attributes['resultReplay'] = result ;
