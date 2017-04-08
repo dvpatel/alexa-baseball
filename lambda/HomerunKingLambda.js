@@ -16,6 +16,7 @@ exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = process.env.ALEXA_APP_ID;  
     alexa.registerHandlers(baseballHandlers);
+    
     alexa.execute();
 }
 
@@ -122,9 +123,7 @@ var baseballHandlers = {
 	                self.attributes['result'] = result ;
 	                self.attributes['resultReplay'] = result ;
 
-
-	    	    	self.emit(':tell', result, result);
-
+	    	    	self.emit(':tell', result, result);	    	    	
 	    	    }
 	    	    
 	    	})	        
@@ -158,8 +157,7 @@ var baseballHandlers = {
 	                self.attributes['result'] = result ;
 	                self.attributes['resultReplay'] = result ;
 
-		    	    self.emit(':tell', result, result);
-		    	    
+		    	    self.emit(':tell', result, result);		    	    
 	    		}				    		
 	    	}) ;	        
 	    },
@@ -243,19 +241,28 @@ var baseballHandlers = {
 	    },
 	    	    
 	    'AMAZON.HelpIntent': function() {
-	        this.emit(':ask', ' Ask sports nation to get you stats for your favorite sport player.  ' +  
-	        		'Try asking sports nation for Babe Ruth career stats.');
+	    	
+	    	var result = ' Ask sports nation to get you stats for your favorite sport player.  ' +  
+    		'Try asking sports nation for Babe Ruth career stats.  ' ;
+	    	
+            this.attributes['result'] = result ;
+            this.attributes['resultReplay'] = result ;
+	    	
+	        this.emit(':ask', result, result);
+	        
 	    },
 	    
-	    /*  Disable repeat for now.
+	    /*  Disable repeat for now. */
 	    'AMAZON.RepeatIntent': function () {
 	    	
-	    	var result = "Repeating.  " + this.attributes['result'] ;
-	    	var resultReplay = "Repeating again."  + this.attributes['resultReplay'] ;
-	    	
-	        this.emit(':ask', result, resultReplay) ;
-	        
-	    },*/
+	    	if (this.attributes['result']) {
+		    	var result = this.attributes['result'];
+		        this.emit(':ask', result, result) ;
+	    	} else {
+		    	var result = "Sorry, there is no information to repeat.  Please ask sports nation for your favorite stat.";
+		        this.emit(':tell', result, result) ;
+	    	}
+	    },
 	    
 	    'SessionEndedRequest': function() {
     		this.emit(':tell', "Ok.  See ya!");    		

@@ -77,6 +77,15 @@ PlayerCareerStatsIntent get me career stats for {firstName} {lastName}
 PlayerCareerStatsIntent find career stats for {firstName} {lastName}
 PlayerCareerStatsIntent find me career stats for {firstName} {lastName}
 
+PlayerCareerStatsIntent What are the stats for {firstName} {lastName}
+PlayerCareerStatsIntent tell me stats for {firstName} {lastName}
+PlayerCareerStatsIntent give stats for {firstName} {lastName}
+PlayerCareerStatsIntent give me stats for {firstName} {lastName}
+PlayerCareerStatsIntent get stats for {firstName} {lastName}
+PlayerCareerStatsIntent get me stats for {firstName} {lastName}
+PlayerCareerStatsIntent find stats for {firstName} {lastName}
+PlayerCareerStatsIntent find me stats for {firstName} {lastName}
+
 PlayerCareerStatsIntent What is {firstName} {lastName} career stats
 PlayerCareerStatsIntent What's {firstName} {lastName} career stats
 PlayerCareerStatsIntent tell me {firstName} {lastName} career stats
