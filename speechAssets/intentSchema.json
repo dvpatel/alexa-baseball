@@ -82,7 +82,7 @@
       ]
     },    
     {
-        "intent": "AMAZON.RepeatIntent"
+      "intent": "AMAZON.RepeatIntent"
     },    
     {
       "intent": "AMAZON.HelpIntent"
